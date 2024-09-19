@@ -62,6 +62,11 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
 
     implementation(libs.androidx.navigation.compose) // Para poder navegar entre pantallas
+    implementation(libs.gson) // Para leer ficheros JSON
+    implementation(libs.coil.compose)
+    //implementation(libs.androidx.ui.android)
+    // Para acceder a imágenes en Internet
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
