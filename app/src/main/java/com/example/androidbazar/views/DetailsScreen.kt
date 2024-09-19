@@ -1,6 +1,8 @@
 package com.example.androidbazar.views
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -34,6 +37,8 @@ import com.example.androidbazar.navigation.Screens
 fun DetailsScreen(navController: NavController, navigateBack: () -> Unit) {
 
     // TODO: un botón deberá ser "home" (volver a la primera pantalla)
+
+    var context = LocalContext.current
 
     Scaffold (
         topBar = {
@@ -72,7 +77,11 @@ fun DetailsScreen(navController: NavController, navigateBack: () -> Unit) {
                 }
                 Spacer(modifier = Modifier.padding(start = 16.dp))
                 Button (
-                    onClick = { /*TODO*/},
+                    onClick = {
+                        Toast.makeText(
+                        context,
+                        "¡Compra en tu comercio local, ostias!",
+                        Toast.LENGTH_LONG).show() },
                     modifier = Modifier.padding(top = 16.dp)
                 ) {
                     Text(text = "Añadir a cesta")
@@ -82,6 +91,4 @@ fun DetailsScreen(navController: NavController, navigateBack: () -> Unit) {
         }
 
     }
-
 }
-
