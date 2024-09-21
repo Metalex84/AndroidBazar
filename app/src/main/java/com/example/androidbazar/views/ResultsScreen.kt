@@ -75,11 +75,10 @@ fun ResultsScreen(navController: NavController, navigateBack: () -> Unit) {
             ) {
                 Text("Aquí irá la lista de items")
 
-                // Probemos a cargar una imagen cualquiera con Coil...
                 // TODO: REHACER EL JSON PORQUE LOS LINKS NO LLEVAN A NINGUNA PARTE
                 AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current)
-                        .data("https://i.dummyjson.com/data/products/1/thumbnail.jpg")
+                        .data("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1566425108i/33.jpg")
                         .crossfade(false)
                         .build(),
                     contentDescription = "Imagen de prueba",
