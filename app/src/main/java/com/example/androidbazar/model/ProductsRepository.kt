@@ -1,5 +1,6 @@
 package com.example.androidbazar.model
 
+import android.content.Context
 import com.example.androidbazar.data.AssetsProductsDataSource
 import com.example.androidbazar.data.ProductsDataSource
 
@@ -13,6 +14,15 @@ class ProductsRepository (
 
     fun getItem(id: Int): Item {
         return assetsProductsDataSource.getProductById(id).toItem()
+    }
+
+    /**
+     * 'create' es la factoría para crear el singleton del repositorio para toda la app
+     * */
+    companion object {
+        fun create(context: Context): ProductsRepository {
+            return ProductsRepository(AssetsProductsDataSource(context))
+        }
     }
 }
 
