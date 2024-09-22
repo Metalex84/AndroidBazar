@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">AndroidBazar</string>
+    <string name="json_filename">products.json</string>
+    <string name="toast_confirmation">Apaga esto y apoya el pequeño comercio</string>
+    <string name="text_add_to_cart">"Añadir a cesta"</string>
+    <string name="title_product_detail">"Detalle del producto"</string>
+    <string name="text_home">Vuelve al inicio</string>
 </resources>
