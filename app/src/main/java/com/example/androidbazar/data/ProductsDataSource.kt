@@ -6,19 +6,19 @@ package com.example.androidbazar.data
 
 class ProductsDataSource {
 
-    data class Bazar (
-        val bazar: List<Product>
+    data class Products(
+        val products: List<Product>
     )
 
-    data class Product (
+    data class Product(
         val id: Int,
         val title: String,
         val description: String,
-        val price: Float,
-        val discountPercentage: Float,
-        val rating: Float,
+        val price: Double,
+        val discountPercentage: Double,
+        val rating: Double,
         val stock: Int,
-        val brand: String,
+        val brand: String?,
         val category: String,
         val thumbnail: String,
         val images: List<String>

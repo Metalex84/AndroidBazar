@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,23 +25,32 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.androidbazar.R
+import com.example.androidbazar.data.ProductsRepository
 import com.example.androidbazar.navigation.Screens
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultsScreen(navController: NavController, navigateBack: () -> Unit) {
+
+    val context = LocalContext.current
+    val repository = remember { ProductsRepository.create(context.applicationContext) }
+
+    val productsList = remember { repository.getAll() } // OJO, en algun momento "brand" es null
 
     Scaffold (
         topBar = {
@@ -48,7 +60,10 @@ fun ResultsScreen(navController: NavController, navigateBack: () -> Unit) {
                     titleContentColor = Color.Black
                 ),
                 title = {
-                    Text(text = "Lista de resultados", fontWeight = FontWeight.Bold)
+                    Text(
+                        text = stringResource(R.string.title_list_results),
+                        fontWeight = FontWeight.Bold
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = navigateBack) {
@@ -73,29 +88,36 @@ fun ResultsScreen(navController: NavController, navigateBack: () -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Aquí irá la lista de items")
-
-                // TODO: REHACER EL JSON PORQUE LOS LINKS NO LLEVAN A NINGUNA PARTE
-                AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current)
-                        .data("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1566425108i/33.jpg")
-                        .crossfade(false)
-                        .build(),
-                    contentDescription = "Imagen de prueba",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .padding(start = 2.dp)
-                        .fillMaxWidth()
-                        .aspectRatio(1.0f)
-                        .clip(CircleShape)
-                )
-
-                // LazyColumn { /*TODO*/ }
+                Text("Resultados de busqueda")
+                // TODO: hacer la CARD mas pequeña y con shadow
+                LazyColumn {
+                    items(productsList.size) { index ->
+                        Card (
+                            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+                            onClick = {/* TODO */}
+                        ) {
+                            AsyncImage(
+                                model = ImageRequest.Builder(context = context)
+                                    .data(productsList[index].thumbnail)
+                                    .crossfade(true)
+                                    .build(),
+                                contentDescription = "Image of ${productsList[index].title}",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .padding(start = 2.dp)
+                                    .fillMaxWidth()
+                                    .aspectRatio(1.0f)
+                                    .clip(CircleShape)
+                            )
+                            Text(productsList[index].title)
+                        }
+                    }
+                }
                 Button(
                     onClick = { navController.navigate(route = Screens.DetailsScreen.route) },
                     modifier = Modifier.padding(top = 16.dp)
                 ) {
-                    Text("Ver detalle")
+                    Text(stringResource(R.string.text_view_detail))
                 }
             }
         }

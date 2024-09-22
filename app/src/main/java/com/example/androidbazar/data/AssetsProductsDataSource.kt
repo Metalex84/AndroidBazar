@@ -3,7 +3,7 @@ package com.example.androidbazar.data
 import android.content.Context
 import com.example.androidbazar.R
 import com.example.androidbazar.data.ProductsDataSource.Product
-import com.example.androidbazar.data.ProductsDataSource.Bazar
+import com.example.androidbazar.data.ProductsDataSource.Products
 import com.google.gson.Gson
 
 class AssetsProductsDataSource(private val context: Context) {
@@ -14,8 +14,8 @@ class AssetsProductsDataSource(private val context: Context) {
     fun readProducts(): List<Product> {
         val filename = context.getString(R.string.json_filename)
         val jsonString = context.assets.open(filename).bufferedReader().use { it.readText() }
-        val productList = Gson().fromJson(jsonString, Bazar::class.java)
-        return productList.bazar
+        val products = Gson().fromJson(jsonString, Products::class.java)
+        return products.products
     }
 
     /**

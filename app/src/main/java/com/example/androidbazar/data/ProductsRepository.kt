@@ -1,8 +1,6 @@
-package com.example.androidbazar.model
+package com.example.androidbazar.data
 
 import android.content.Context
-import com.example.androidbazar.data.AssetsProductsDataSource
-import com.example.androidbazar.data.ProductsDataSource
 
 class ProductsRepository (
     private val assetsProductsDataSource: AssetsProductsDataSource
@@ -21,7 +19,9 @@ class ProductsRepository (
      * */
     companion object {
         fun create(context: Context): ProductsRepository {
-            return ProductsRepository(AssetsProductsDataSource(context))
+            return ProductsRepository(
+                AssetsProductsDataSource(context)
+            )
         }
     }
 }
@@ -37,7 +37,7 @@ data class Item (
     val discountPercentage: Double,
     val rating: Double,
     val stock: Int,
-    val brand: String,
+    val brand: String?,
     val category: String,
     val thumbnail: String,
     val images: List<String>
