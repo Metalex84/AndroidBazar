@@ -22,7 +22,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -64,7 +66,7 @@ fun TopBar(
 
 
 @Composable
-fun RatingBar(rating: Double = 0.0, tint: Color) {
+fun CustomRatingBar(rating: Double = 0.0, tint: Color) {
     val stars = 5
 
     val filledStars = floor(rating).toInt()
@@ -111,3 +113,40 @@ fun Thumbnail(context: Context, thumbnail: String, size: Dp) {
     )
 }
 
+@Composable
+fun Title(title: String, size: TextUnit) {
+    Text(
+        text = title,
+        fontWeight = FontWeight.Bold,
+        fontSize = size,
+        modifier = Modifier.padding(top = 20.dp)
+    )
+}
+
+@Composable
+fun Price(price: Double, size: TextUnit) {
+    Text(
+        text = "$price$",
+        fontSize = size,
+        fontWeight = FontWeight.ExtraBold
+    )
+}
+
+@Composable
+fun Description(
+    description: String,
+    size: TextUnit,
+    maxLines: Int,
+    paddingStart: Dp,
+    paddingEnd: Dp
+) {
+    Text(
+        text = description,
+        fontSize = size,
+        maxLines = maxLines,
+        softWrap = true,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier
+            .padding(start = paddingStart, end = paddingEnd)
+    )
+}

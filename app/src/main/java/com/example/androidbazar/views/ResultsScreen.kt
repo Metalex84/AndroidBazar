@@ -6,16 +6,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -24,28 +20,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.androidbazar.R
-import com.example.androidbazar.common.RatingBar
+import com.example.androidbazar.common.Price
+import com.example.androidbazar.common.CustomRatingBar
+import com.example.androidbazar.common.Description
 import com.example.androidbazar.common.Thumbnail
+import com.example.androidbazar.common.Title
 import com.example.androidbazar.common.TopBar
 import com.example.androidbazar.data.Item
 import com.example.androidbazar.data.ProductsRepository
-import kotlin.math.ceil
-import kotlin.math.floor
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -132,56 +123,32 @@ private fun ListOfResults(
                     Column (
                         horizontalAlignment = Alignment.Start
                     ) {
-                        Title(productsList, index)
-                        Description(productsList, index)
+                        Title(
+                            title = productsList[index].title,
+                            size = 22.sp
+                        )
+                        Description(
+                            description = productsList[index].description,
+                            size = 12.sp,
+                            maxLines = 4,
+                            paddingStart = 0.dp,
+                            paddingEnd = 16.dp
+                        )
                         Row (
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Price(productsList, index)
-                            RatingBar(productsList[index].rating, Color.Yellow)
+                            Price(
+                                price = productsList[index].price,
+                                size = 24.sp
+                            )
+                            CustomRatingBar(productsList[index].rating, Color.Yellow)
                         }
                     }
                 }
             }
         }
     }
-}
-
-@Composable
-private fun Price(
-    productsList: List<Item>,
-    index: Int
-) {
-    Text(
-        text = productsList[index].price.toString() + "$",
-        fontSize = 16.sp,
-        fontWeight = FontWeight.ExtraBold
-    )
-}
-
-@Composable
-private fun Description(
-    productsList: List<Item>,
-    index: Int
-) {
-    Text(
-        text = productsList[index].description,
-        fontSize = 12.sp
-    )
-}
-
-@Composable
-private fun Title(
-    productsList: List<Item>,
-    index: Int
-) {
-    Text(
-        text = productsList[index].title,
-        fontWeight = FontWeight.Bold,
-        fontSize = 22.sp,
-        modifier = Modifier.padding(top = 20.dp)
-    )
 }
 
 

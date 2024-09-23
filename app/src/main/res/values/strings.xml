@@ -10,4 +10,5 @@
     <string name="hint_keywords">laptops, smartphones...</string>
     <string name="button_search">Buscar</string>
     <string name="item_thumbnail">This is a random item thumbnail</string>
+    <string name="buildtext_availability">" disponibles"</string>
 </resources>
