@@ -9,4 +9,5 @@
     <string name="text_app_title">Bazar Online</string>
     <string name="hint_keywords">laptops, smartphones...</string>
     <string name="button_search">Buscar</string>
+    <string name="item_thumbnail">This is a random item thumbnail</string>
 </resources>

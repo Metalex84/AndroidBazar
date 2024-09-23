@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -39,6 +40,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbazar.R
 import com.example.androidbazar.common.RatingBar
+import com.example.androidbazar.common.Thumbnail
 import com.example.androidbazar.common.TopBar
 import com.example.androidbazar.data.Item
 import com.example.androidbazar.data.ProductsRepository
@@ -114,13 +116,19 @@ private fun ListOfResults(
                 colors = CardDefaults.cardColors(
                     containerColor = Color.Transparent
                 ),
-                modifier = Modifier.fillMaxWidth().padding(top = 12.dp, end = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp, end = 12.dp),
                 onClick = {
                     navController.navigate(route = "details_screen/${productsList[index].id}")
                 }
             ) {
                 Row {
-                    Thumbnail(context, productsList, index)
+                    Thumbnail(
+                        context = context,
+                        thumbnail = productsList[index].thumbnail,
+                        size = 160.dp
+                    )
                     Column (
                         horizontalAlignment = Alignment.Start
                     ) {
@@ -173,27 +181,6 @@ private fun Title(
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
         modifier = Modifier.padding(top = 20.dp)
-    )
-}
-
-@Composable
-private fun Thumbnail(
-    context: Context,
-    productsList: List<Item>,
-    index: Int
-) {
-    AsyncImage(
-        model = ImageRequest.Builder(context = context)
-            .data(productsList[index].thumbnail)
-            .crossfade(true)
-            .build(),
-        contentDescription = "Item thumbnail",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .size(160.dp)
-            .padding(16.dp)
-            .aspectRatio(1.0f)
-            .clip(CircleShape)
     )
 }
 

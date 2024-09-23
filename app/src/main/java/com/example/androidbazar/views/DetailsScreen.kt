@@ -52,7 +52,13 @@ fun DetailsScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Aquí irá el detalle del Item")
+            /** AQUI VA EL TOMATE*/
+
+            Row {
+
+            }
+
+            /**********************/
             Row {
                 Button(
                     onClick = { navController.navigate(route = Screens.WelcomeScreen.route) },

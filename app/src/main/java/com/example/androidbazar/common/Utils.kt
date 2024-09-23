@@ -1,5 +1,10 @@
 package com.example.androidbazar.common
 
+import android.content.Context
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -10,9 +15,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.androidbazar.R
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -51,10 +64,7 @@ fun TopBar(
 
 
 @Composable
-fun RatingBar(
-    rating: Double = 0.0,
-    tint: Color
-) {
+fun RatingBar(rating: Double = 0.0, tint: Color) {
     val stars = 5
 
     val filledStars = floor(rating).toInt()
@@ -82,5 +92,22 @@ fun RatingBar(
             tint = tint
         )
     }
+}
+
+@Composable
+fun Thumbnail(context: Context, thumbnail: String, size: Dp) {
+    AsyncImage(
+        model = ImageRequest.Builder(context = context)
+            .data(thumbnail)
+            .crossfade(true)
+            .build(),
+        contentDescription = stringResource(R.string.item_thumbnail),
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .size(size)
+            .padding(16.dp)
+            .aspectRatio(1.0f)
+            .clip(CircleShape)
+    )
 }
 
