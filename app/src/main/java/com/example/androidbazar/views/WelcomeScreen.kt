@@ -1,14 +1,11 @@
 package com.example.androidbazar.views
 
-import android.app.appsearch.SearchResult.MatchInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -39,7 +36,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.androidbazar.R
-import com.example.androidbazar.navigation.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,7 +83,7 @@ fun WelcomeScreen (navController: NavController) {
                 )
                 TextField(
                     value = typoSearch,
-                    //singleLine = true,
+                    singleLine = true,
                     onValueChange = { typoSearch = it },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Search
@@ -99,7 +95,7 @@ fun WelcomeScreen (navController: NavController) {
                     onClick = { navController.navigate(route = "results_screen/${typoSearch}") },
                     modifier = Modifier.padding(top = 16.dp)
                 ) {
-                    Text("Buscar")
+                    Text(stringResource(R.string.button_search))
                 }
             }
         }
