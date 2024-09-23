@@ -80,7 +80,7 @@ fun WelcomeScreen (navController: NavController) {
                     contentDescription = null
                 )
                 Text(
-                    text = "Bazar Online",
+                    text = stringResource(R.string.text_app_title),
                     style = MaterialTheme.typography.headlineLarge,
                     modifier = Modifier
                         .padding(bottom = 16.dp)
@@ -92,12 +92,11 @@ fun WelcomeScreen (navController: NavController) {
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Search
                     ),
-                    label = { Text("laptops, smartphones...") },
+                    label = { Text(stringResource(R.string.hint_keywords)) },
                     leadingIcon = { Icon (imageVector = Icons.Default.Search, contentDescription = null) }
                 )
                 Button(
-                    // TODO: cambiar esto y agregar parámetro de búsqueda (String que mete el usuario)
-                    onClick = { navController.navigate(route = Screens.ResultsScreen.route) },
+                    onClick = { navController.navigate(route = "results_screen/${typoSearch}") },
                     modifier = Modifier.padding(top = 16.dp)
                 ) {
                     Text("Buscar")

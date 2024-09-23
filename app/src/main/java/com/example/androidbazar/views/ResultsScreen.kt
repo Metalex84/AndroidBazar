@@ -29,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,7 +58,11 @@ import kotlin.math.floor
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResultsScreen(navController: NavController, navigateBack: () -> Unit) {
+fun ResultsScreen(
+    keywords: String,
+    navController: NavController,
+    navigateBack: () -> Unit
+) {
 
     val context = LocalContext.current
     val repository = remember { ProductsRepository.create(context.applicationContext) }
@@ -82,7 +87,7 @@ fun ResultsScreen(navController: NavController, navigateBack: () -> Unit) {
                 /*
                 * TODO: cabecera completa de la busqueda
                 * */
-                SearchHeader()
+                SearchHeader(keywords)
 
                 /* LISTA DE RESULTADOS */
                 ListOfResults(productsList, context, navController)
@@ -146,9 +151,7 @@ private fun ListOfResults(
                             StarRatingBar(productsList[index].rating, Color.Yellow)
                         }
                     }
-
                 }
-
             }
         }
     }
@@ -190,9 +193,11 @@ fun StarRatingBar(
 
 
 @Composable
-private fun SearchHeader() {
+private fun SearchHeader(
+    keywords: String?
+) {
     Text(
-        text = "Resultados de busqueda de xxxx",
+        text = "Resultados de busqueda de '$keywords': xx",
         fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.ExtraBold
     )

@@ -6,4 +6,6 @@
     <string name="title_product_detail">"Detalle del producto"</string>
     <string name="text_home">Vuelve al inicio</string>
     <string name="text_view_detail">Ver detalle</string>
+    <string name="text_app_title">Bazar Online</string>
+    <string name="hint_keywords">laptops, smartphones...</string>
 </resources>
