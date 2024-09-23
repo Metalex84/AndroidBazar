@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -35,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -43,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.request.ImageRequest
 import com.example.androidbazar.R
 import com.example.androidbazar.data.Item
@@ -140,9 +143,7 @@ private fun ListOfResults(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.ExtraBold
                             )
-                            Text(
-                                text = productsList[index].rating.toString()
-                            )
+                            StarRatingBar(productsList[index].rating, Color.Yellow)
                         }
                     }
 
@@ -150,6 +151,40 @@ private fun ListOfResults(
 
             }
         }
+    }
+}
+
+@Composable
+fun StarRatingBar(
+    rating: Double = 0.0,
+    tint: Color
+) {
+    val stars = 5
+
+    val filledStars = floor(rating).toInt()
+    val unfilledStars = ceil(stars.toDouble() - filledStars - 1)
+    val halfStar = rating % 1 != 0.0
+
+    repeat(filledStars) {
+        Icon(
+            painter = painterResource(R.drawable.baseline_star_24),
+            contentDescription = null,
+            tint = tint
+        )
+    }
+    if (halfStar) {
+         Icon(
+             painter = painterResource(R.drawable.baseline_star_half_24),
+             contentDescription = null,
+             tint = tint
+         )
+    }
+    repeat(unfilledStars.toInt()) {
+        Icon(
+            painter = painterResource(R.drawable.outline_star_outline_24),
+            contentDescription = null,
+            tint = tint
+        )
     }
 }
 
