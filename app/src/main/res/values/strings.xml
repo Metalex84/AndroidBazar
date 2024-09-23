@@ -5,6 +5,5 @@
     <string name="text_add_to_cart">"Añadir a cesta"</string>
     <string name="title_product_detail">"Detalle del producto"</string>
     <string name="text_home">Vuelve al inicio</string>
-    <string name="title_list_results">Lista de resultados</string>
     <string name="text_view_detail">Ver detalle</string>
 </resources>

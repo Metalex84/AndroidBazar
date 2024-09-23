@@ -1,18 +1,21 @@
 package com.example.androidbazar.views
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -33,14 +36,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbazar.R
+import com.example.androidbazar.data.Item
 import com.example.androidbazar.data.ProductsRepository
 import com.example.androidbazar.navigation.Screens
+import kotlin.math.ceil
+import kotlin.math.floor
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,28 +62,7 @@ fun ResultsScreen(navController: NavController, navigateBack: () -> Unit) {
     val productsList = remember { repository.getAll() } // OJO, en algun momento "brand" es null
 
     Scaffold (
-        topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = Color.Black
-                ),
-                title = {
-                    Text(
-                        text = stringResource(R.string.title_list_results),
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = navigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        }
+        topBar = { TopBar(navigateBack) }
     ) { innerPadding ->
         Surface(
             modifier = Modifier
@@ -88,38 +76,114 @@ fun ResultsScreen(navController: NavController, navigateBack: () -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Resultados de busqueda")
-                // TODO: hacer la CARD mas pequeña y con shadow
-                LazyColumn {
-                    items(productsList.size) { index ->
-                        Card (
-                            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-                            onClick = {/* TODO */}
-                        ) {
-                            AsyncImage(
-                                model = ImageRequest.Builder(context = context)
-                                    .data(productsList[index].thumbnail)
-                                    .crossfade(true)
-                                    .build(),
-                                contentDescription = "Image of ${productsList[index].title}",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .padding(start = 2.dp)
-                                    .fillMaxWidth()
-                                    .aspectRatio(1.0f)
-                                    .clip(CircleShape)
-                            )
-                            Text(productsList[index].title)
-                        }
-                    }
-                }
-                Button(
-                    onClick = { navController.navigate(route = Screens.DetailsScreen.route) },
-                    modifier = Modifier.padding(top = 16.dp)
-                ) {
-                    Text(stringResource(R.string.text_view_detail))
-                }
+                /*
+                * TODO: cabecera completa de la busqueda
+                * */
+                SearchHeader()
+
+                /* LISTA DE RESULTADOS */
+                ListOfResults(productsList, context, navController)
+
             }
         }
     }
+}
+
+@Composable
+private fun ListOfResults(
+    productsList: List<Item>,
+    context: Context,
+    navController: NavController
+) {
+    LazyColumn {
+        items(productsList.size) { index ->
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.Transparent
+                ),
+                modifier = Modifier.fillMaxWidth().padding(top = 12.dp, end = 12.dp),
+                onClick = { navController.navigate(route = Screens.DetailsScreen.route) }
+            ) {
+                Row {
+                    AsyncImage(
+                        model = ImageRequest.Builder(context = context)
+                            .data(productsList[index].thumbnail)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "Item thumbnail",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(160.dp)
+                            .padding(16.dp)
+                            .aspectRatio(1.0f)
+                            .clip(CircleShape)
+                    )
+                    Column (
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = productsList[index].title,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 22.sp,
+                            modifier = Modifier.padding(top = 20.dp)
+                        )
+                        Text(
+                            text = productsList[index].description,
+                            fontSize = 12.sp
+                        )
+                        Row (
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = productsList[index].price.toString() + "$",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                            Text(
+                                text = productsList[index].rating.toString()
+                            )
+                        }
+                    }
+
+                }
+
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun SearchHeader() {
+    Text(
+        text = "Resultados de busqueda de xxxx",
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.ExtraBold
+    )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun TopBar(navigateBack: () -> Unit) {
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = Color.Black
+        ),
+        title = {
+            Text(
+                text = stringResource(R.string.text_home),
+                fontStyle = FontStyle.Italic
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = navigateBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = null
+                )
+            }
+        }
+    )
 }
