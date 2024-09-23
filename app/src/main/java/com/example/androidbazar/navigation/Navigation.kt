@@ -29,8 +29,12 @@ fun Navigation() {
                 navController.popBackStack()
             }
         }
-        composable(route = Screens.DetailsScreen.route) {
-            DetailsScreen(navController) {
+        composable(
+            route = "details_screen/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.IntType} )
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getInt("id")
+            DetailsScreen(id.toString(), navController) {
                 navController.popBackStack()
             }
         }

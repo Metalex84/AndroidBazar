@@ -13,23 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,23 +31,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.request.ImageRequest
 import com.example.androidbazar.R
+import com.example.androidbazar.common.TopBar
 import com.example.androidbazar.data.Item
 import com.example.androidbazar.data.ProductsRepository
-import com.example.androidbazar.navigation.Screens
 import kotlin.math.ceil
 import kotlin.math.floor
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultsScreen(
     keywords: String,
@@ -67,10 +55,18 @@ fun ResultsScreen(
     val context = LocalContext.current
     val repository = remember { ProductsRepository.create(context.applicationContext) }
 
-    val productsList = remember { repository.getAll() } // OJO, en algun momento "brand" es null
+    // OJO, en algun momento "brand" es null
+    val completeProductsList = remember { repository.getAll() }
+
+    val productsList = completeProductsList.filter { keywordSearch(it, keywords) }
 
     Scaffold (
-        topBar = { TopBar(navigateBack) }
+        topBar = {
+            TopBar(
+                text = stringResource(R.string.text_home),
+                navigateBack = navigateBack,
+                hasNavBack = true
+            ) }
     ) { innerPadding ->
         Surface(
             modifier = Modifier
@@ -87,7 +83,7 @@ fun ResultsScreen(
                 /*
                 * TODO: cabecera completa de la busqueda
                 * */
-                SearchHeader(keywords)
+                SearchHeader(keywords, productsList.size)
 
                 /* LISTA DE RESULTADOS */
                 ListOfResults(productsList, context, navController)
@@ -96,6 +92,14 @@ fun ResultsScreen(
         }
     }
 }
+
+@Composable
+private fun keywordSearch(it: Item, keywords: String) =
+    it.title.contains(keywords, ignoreCase = true) ||
+            it.description.contains(keywords, ignoreCase = true) ||
+            it.category.contains(keywords, ignoreCase = true) ||
+            it.brand?.contains(keywords, ignoreCase = true) ?: false
+
 
 @Composable
 private fun ListOfResults(
@@ -110,45 +114,23 @@ private fun ListOfResults(
                     containerColor = Color.Transparent
                 ),
                 modifier = Modifier.fillMaxWidth().padding(top = 12.dp, end = 12.dp),
-                onClick = { navController.navigate(route = Screens.DetailsScreen.route) }
+                onClick = {
+                    navController.navigate(route = "details_screen/${productsList[index].id}")
+                }
             ) {
                 Row {
-                    AsyncImage(
-                        model = ImageRequest.Builder(context = context)
-                            .data(productsList[index].thumbnail)
-                            .crossfade(true)
-                            .build(),
-                        contentDescription = "Item thumbnail",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(160.dp)
-                            .padding(16.dp)
-                            .aspectRatio(1.0f)
-                            .clip(CircleShape)
-                    )
+                    Thumbnail(context, productsList, index)
                     Column (
                         horizontalAlignment = Alignment.Start
                     ) {
-                        Text(
-                            text = productsList[index].title,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp,
-                            modifier = Modifier.padding(top = 20.dp)
-                        )
-                        Text(
-                            text = productsList[index].description,
-                            fontSize = 12.sp
-                        )
+                        Title(productsList, index)
+                        Description(productsList, index)
                         Row (
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(
-                                text = productsList[index].price.toString() + "$",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.ExtraBold
-                            )
-                            StarRatingBar(productsList[index].rating, Color.Yellow)
+                            Price(productsList, index)
+                            RatingBar(productsList[index].rating, Color.Yellow)
                         }
                     }
                 }
@@ -158,7 +140,64 @@ private fun ListOfResults(
 }
 
 @Composable
-fun StarRatingBar(
+private fun Price(
+    productsList: List<Item>,
+    index: Int
+) {
+    Text(
+        text = productsList[index].price.toString() + "$",
+        fontSize = 16.sp,
+        fontWeight = FontWeight.ExtraBold
+    )
+}
+
+@Composable
+private fun Description(
+    productsList: List<Item>,
+    index: Int
+) {
+    Text(
+        text = productsList[index].description,
+        fontSize = 12.sp
+    )
+}
+
+@Composable
+private fun Title(
+    productsList: List<Item>,
+    index: Int
+) {
+    Text(
+        text = productsList[index].title,
+        fontWeight = FontWeight.Bold,
+        fontSize = 22.sp,
+        modifier = Modifier.padding(top = 20.dp)
+    )
+}
+
+@Composable
+private fun Thumbnail(
+    context: Context,
+    productsList: List<Item>,
+    index: Int
+) {
+    AsyncImage(
+        model = ImageRequest.Builder(context = context)
+            .data(productsList[index].thumbnail)
+            .crossfade(true)
+            .build(),
+        contentDescription = "Item thumbnail",
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .size(160.dp)
+            .padding(16.dp)
+            .aspectRatio(1.0f)
+            .clip(CircleShape)
+    )
+}
+
+@Composable
+fun RatingBar(
     rating: Double = 0.0,
     tint: Color
 ) {
@@ -193,37 +232,10 @@ fun StarRatingBar(
 
 
 @Composable
-private fun SearchHeader(
-    keywords: String?
-) {
+private fun SearchHeader(keywords: String?, size: Int) {
     Text(
-        text = "Resultados de busqueda de '$keywords': xx",
+        text = "Resultados de busqueda de '$keywords': $size",
         fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.ExtraBold
-    )
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun TopBar(navigateBack: () -> Unit) {
-    CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = Color.Black
-        ),
-        title = {
-            Text(
-                text = stringResource(R.string.text_home),
-                fontStyle = FontStyle.Italic
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = navigateBack) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null
-                )
-            }
-        }
     )
 }

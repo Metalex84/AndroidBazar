@@ -13,15 +13,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,13 +28,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.androidbazar.R
+import com.example.androidbazar.common.TopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WelcomeScreen (navController: NavController) {
 
@@ -45,14 +44,10 @@ fun WelcomeScreen (navController: NavController) {
 
     Scaffold (
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text( text = stringResource(R.string.app_name), fontWeight = FontWeight.Bold )
-                },
-                colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
-            )
+            TopBar(
+                text = stringResource(R.string.app_name),
+                navigateBack = {},
+                hasNavBack = false)
         }
     ) {
         innerPadding ->
@@ -77,9 +72,10 @@ fun WelcomeScreen (navController: NavController) {
                 )
                 Text(
                     text = stringResource(R.string.text_app_title),
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 32.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
                 TextField(
                     value = typoSearch,
@@ -101,8 +97,4 @@ fun WelcomeScreen (navController: NavController) {
         }
 
     }
-
-
-
-
 }
