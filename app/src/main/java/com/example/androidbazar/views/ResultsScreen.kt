@@ -38,6 +38,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbazar.R
+import com.example.androidbazar.common.RatingBar
 import com.example.androidbazar.common.TopBar
 import com.example.androidbazar.data.Item
 import com.example.androidbazar.data.ProductsRepository
@@ -194,40 +195,6 @@ private fun Thumbnail(
             .aspectRatio(1.0f)
             .clip(CircleShape)
     )
-}
-
-@Composable
-fun RatingBar(
-    rating: Double = 0.0,
-    tint: Color
-) {
-    val stars = 5
-
-    val filledStars = floor(rating).toInt()
-    val unfilledStars = ceil(stars.toDouble() - filledStars - 1)
-    val halfStar = rating % 1 != 0.0
-
-    repeat(filledStars) {
-        Icon(
-            painter = painterResource(R.drawable.baseline_star_24),
-            contentDescription = null,
-            tint = tint
-        )
-    }
-    if (halfStar) {
-         Icon(
-             painter = painterResource(R.drawable.baseline_star_half_24),
-             contentDescription = null,
-             tint = tint
-         )
-    }
-    repeat(unfilledStars.toInt()) {
-        Icon(
-            painter = painterResource(R.drawable.outline_star_outline_24),
-            contentDescription = null,
-            tint = tint
-        )
-    }
 }
 
 
