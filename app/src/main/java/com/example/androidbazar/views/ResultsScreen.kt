@@ -2,19 +2,22 @@ package com.example.androidbazar.views
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -25,6 +28,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -50,9 +55,18 @@ fun ResultsScreen(
     val repository = remember { ProductsRepository.create(context.applicationContext) }
 
     // OJO, en algun momento "brand" es null
-    val completeProductsList = remember { repository.getAll() }
+    val productsList = remember { repository.getAll() }
 
-    val productsList = completeProductsList.filter { keywordSearch(it, keywords) }
+    val searchedSubList = productsList.filter { keywordSearch(it, keywords) }
+
+    val categoriesSublist = searchedSubList.map { it.category }
+    val eachCategory = categoriesSublist.groupingBy { it }.eachCount()
+
+    val buttonTypes = listOf(
+        MaterialTheme.colorScheme.surfaceVariant,
+        MaterialTheme.colorScheme.surfaceContainer,
+        MaterialTheme.colorScheme.surfaceContainerLow
+    )
 
     Scaffold (
         topBar = {
@@ -61,30 +75,62 @@ fun ResultsScreen(
                 navigateBack = navigateBack,
                 hasNavBack = true
             ) }
-    ) { innerPadding ->
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.onSecondaryContainer),
-            color = MaterialTheme.colorScheme.background
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Column (
+                modifier = Modifier.fillMaxSize()
             ) {
                 /*
                 * TODO: cabecera completa de la busqueda
                 * */
-                SearchHeader(keywords, productsList.size)
-
-                /* LISTA DE RESULTADOS */
-                ListOfResults(productsList, context, navController)
-
+                ResultsHeader(
+                    keywords = keywords,
+                    size = searchedSubList.size,
+                )
+                CategoriesOfSearch(
+                    eachCategory = eachCategory,
+                    buttonTypes = buttonTypes
+                )
+                ListOfResults(
+                    productsList = searchedSubList,
+                    context = context,
+                    navController = navController
+                )
             }
         }
+
+}
+
+@Composable
+fun CategoriesOfSearch(eachCategory: Map<String, Int>, buttonTypes: List<Color>) {
+    val categoryList = eachCategory.toList()
+    var index = 0
+
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 150.dp),
+        modifier = Modifier.padding(top = 16.dp)
+    ) {
+        items(categoryList) { (key, value) ->
+            ElevatedCard(
+                colors = CardDefaults.cardColors(
+                    containerColor = buttonTypes[(index++%3)]
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 8.dp
+                ),
+                modifier = Modifier.padding(8.dp)
+            ){
+                Text(
+                    text = "$key: $value",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.ExtraBold,
+                    textAlign = TextAlign.Center
+                )
+            }
+            Spacer(modifier  = Modifier.padding(start = 8.dp))
+        }
     }
+
 }
 
 @Composable
@@ -99,9 +145,10 @@ private fun keywordSearch(it: Item, keywords: String) =
 private fun ListOfResults(
     productsList: List<Item>,
     context: Context,
-    navController: NavController
+    navController: NavController,
 ) {
-    LazyColumn {
+    LazyColumn (
+    ) {
         items(productsList.size) { index ->
             Card(
                 colors = CardDefaults.cardColors(
@@ -151,12 +198,13 @@ private fun ListOfResults(
     }
 }
 
-
+// TODO: es posible que haya que modificar el padding manual
 @Composable
-private fun SearchHeader(keywords: String?, size: Int) {
+private fun ResultsHeader(keywords: String?, size: Int) {
     Text(
         text = "Resultados de busqueda de '$keywords': $size",
         fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.ExtraBold
+        fontWeight = FontWeight.ExtraBold,
+        modifier = Modifier.padding(top = 150.dp)
     )
 }

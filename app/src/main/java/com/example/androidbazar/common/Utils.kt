@@ -2,6 +2,7 @@ package com.example.androidbazar.common
 
 import android.content.Context
 import androidx.compose.foundation.layout.aspectRatio
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -53,7 +54,9 @@ fun TopBar(
         },
         navigationIcon = {
             if (hasNavBack) {
-                IconButton(onClick = navigateBack) {
+                IconButton(
+                    onClick = navigateBack,
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = null
