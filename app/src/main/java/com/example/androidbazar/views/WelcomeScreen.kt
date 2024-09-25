@@ -8,17 +8,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,12 +27,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.androidbazar.R
 import com.example.androidbazar.common.TopBar
+import com.example.androidbazar.common.KeywordSearchBar
 
 @Composable
 fun WelcomeScreen (navController: NavController) {
@@ -77,15 +74,11 @@ fun WelcomeScreen (navController: NavController) {
                     fontSize = 32.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                TextField(
+                KeywordSearchBar(
                     value = typoSearch,
-                    singleLine = true,
+                    leadingIcon = Icons.Default.Search,
                     onValueChange = { typoSearch = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Search
-                    ),
-                    label = { Text(stringResource(R.string.hint_keywords)) },
-                    leadingIcon = { Icon (imageVector = Icons.Default.Search, contentDescription = null) }
+                    label = R.string.hint_keywords,
                 )
                 Button(
                     onClick = { navController.navigate(route = "results_screen/${typoSearch}") },
@@ -98,3 +91,5 @@ fun WelcomeScreen (navController: NavController) {
 
     }
 }
+
+
