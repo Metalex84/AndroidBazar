@@ -148,6 +148,9 @@ private fun ListOfResults(
     navController: NavController,
 ) {
     LazyColumn (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 52.dp)
     ) {
         items(productsList.size) { index ->
             Card(
