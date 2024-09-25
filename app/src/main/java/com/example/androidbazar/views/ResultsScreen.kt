@@ -71,7 +71,7 @@ fun ResultsScreen(
         MaterialTheme.colorScheme.surfaceContainerLow
     )
 
-    var typoSearch by rememberSaveable { mutableStateOf("") }
+    var typoSearch by rememberSaveable { mutableStateOf(keywords) }
 
     Scaffold (
         topBar = {
