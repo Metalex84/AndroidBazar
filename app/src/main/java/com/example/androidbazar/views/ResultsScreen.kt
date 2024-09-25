@@ -20,13 +20,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +41,8 @@ import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
 import com.example.androidbazar.common.TextDescription
 import com.example.androidbazar.common.ImageThumbnail
+import com.example.androidbazar.common.ResultsHeader
+import com.example.androidbazar.common.SearchHeader
 import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.common.TopBar
 import com.example.androidbazar.data.Item
@@ -50,11 +55,9 @@ fun ResultsScreen(
     navController: NavController,
     navigateBack: () -> Unit
 ) {
-
     val context = LocalContext.current
     val repository = remember { ProductsRepository.create(context.applicationContext) }
 
-    // OJO, en algun momento "brand" es null
     val productsList = remember { repository.getAll() }
 
     val searchedSubList = productsList.filter { keywordSearch(it, keywords) }
@@ -68,6 +71,8 @@ fun ResultsScreen(
         MaterialTheme.colorScheme.surfaceContainerLow
     )
 
+    var typoSearch by rememberSaveable { mutableStateOf("") }
+
     Scaffold (
         topBar = {
             TopBar(
@@ -76,17 +81,18 @@ fun ResultsScreen(
                 hasNavBack = true
             ) }
         ) {
-            Column (
-                modifier = Modifier.fillMaxSize()
-            ) {
-                /*
-                * TODO: cabecera completa de la busqueda
-                * */
+            Column (modifier = Modifier.fillMaxSize()) {
+                SearchHeader(
+                    value = typoSearch,
+                    onValueChange = { typoSearch = it },
+                    label = R.string.hint_keywords,
+                    modifier = Modifier.fillMaxWidth().padding(top = 120.dp)
+                )
                 ResultsHeader(
                     keywords = keywords,
                     size = searchedSubList.size,
                 )
-                CategoriesOfSearch(
+                CategoriesGroupedBy(
                     eachCategory = eachCategory,
                     buttonTypes = buttonTypes
                 )
@@ -101,7 +107,7 @@ fun ResultsScreen(
 }
 
 @Composable
-fun CategoriesOfSearch(eachCategory: Map<String, Int>, buttonTypes: List<Color>) {
+fun CategoriesGroupedBy(eachCategory: Map<String, Int>, buttonTypes: List<Color>) {
     val categoryList = eachCategory.toList()
     var index = 0
 
@@ -201,13 +207,3 @@ private fun ListOfResults(
     }
 }
 
-// TODO: es posible que haya que modificar el padding manual
-@Composable
-private fun ResultsHeader(keywords: String?, size: Int) {
-    Text(
-        text = "Resultados de busqueda de '$keywords': $size",
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.ExtraBold,
-        modifier = Modifier.padding(top = 150.dp)
-    )
-}

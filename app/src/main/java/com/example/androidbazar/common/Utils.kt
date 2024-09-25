@@ -1,16 +1,18 @@
 package com.example.androidbazar.common
 
 import android.content.Context
-import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -28,12 +31,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbazar.R
@@ -190,4 +195,68 @@ fun MainActionButton(onClick: () -> Unit, text: Int) {
     ) {
         Text(text = stringResource(text))
     }
+}
+
+@Composable
+fun AppMainPicture(picture: Int, size: Dp) {
+    Image(
+        painter = painterResource(picture),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .size(size)
+            .padding(top = 16.dp)
+            .aspectRatio(1.0f)
+            .clip(CircleShape)
+    )
+}
+
+
+@Composable
+fun AppMainTitle(
+    picture: Int
+) {
+    Text(
+        text = stringResource(picture),
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 32.sp,
+        modifier = Modifier.padding(bottom = 16.dp)
+    )
+}
+
+
+@Composable
+fun SearchHeader(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: Int,
+    modifier: Modifier
+) {
+    Row (
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Bottom,
+        modifier = modifier
+    ) {
+        AppMainPicture(
+            picture = R.drawable.shopping,
+            size = 84.dp
+        )
+        KeywordSearchBar(
+            value = value,
+            leadingIcon = Icons.Default.Search,
+            onValueChange = onValueChange,
+            label = label
+        )
+    }
+}
+
+@Composable
+fun ResultsHeader(keywords: String?, size: Int) {
+    Text(
+        text = stringResource(R.string.text_search_results_param, keywords as String, size),
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.ExtraBold,
+        modifier = Modifier.padding(top = 16.dp)
+    )
 }

@@ -1,6 +1,5 @@
 package com.example.androidbazar.views
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +13,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,17 +20,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.androidbazar.R
 import com.example.androidbazar.common.TopBar
 import com.example.androidbazar.common.KeywordSearchBar
 import com.example.androidbazar.common.MainActionButton
+import com.example.androidbazar.common.AppMainPicture
+import com.example.androidbazar.common.AppMainTitle
 
 @Composable
 fun WelcomeScreen (navController: NavController) {
@@ -63,17 +59,11 @@ fun WelcomeScreen (navController: NavController) {
                     .safeDrawingPadding(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Image (
-                    painter = painterResource(R.drawable.shopping),
-                    contentDescription = null
+                AppMainPicture(
+                    picture = R.drawable.shopping,
+                    size = 240.dp
                 )
-                Text(
-                    text = stringResource(R.string.text_app_title),
-                    fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 32.sp,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
+                AppMainTitle(R.string.text_app_title)
                 KeywordSearchBar(
                     value = typoSearch,
                     leadingIcon = Icons.Default.Search,
@@ -89,5 +79,6 @@ fun WelcomeScreen (navController: NavController) {
 
     }
 }
+
 
 

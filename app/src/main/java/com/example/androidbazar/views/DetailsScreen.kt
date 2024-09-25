@@ -7,13 +7,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +38,7 @@ import com.example.androidbazar.data.ProductsRepository
 import com.example.androidbazar.navigation.Screens
 import com.example.androidbazar.common.TopBar
 import com.example.androidbazar.common.MainActionButton
+import com.example.androidbazar.common.SearchHeader
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -46,6 +52,8 @@ fun DetailsScreen(
     val repository = remember { ProductsRepository.create(context.applicationContext) }
 
     val detailedItem = repository.getItem(productId.toInt())
+
+    var typoSearch by rememberSaveable { mutableStateOf("") }
 
     Scaffold (
         topBar = {
@@ -61,6 +69,12 @@ fun DetailsScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            SearchHeader(
+                value = typoSearch,
+                onValueChange = { typoSearch = it },
+                label = R.string.hint_keywords,
+                modifier = Modifier.fillMaxWidth().padding(top = 48.dp)
+            )
             Row {
                 ImageThumbnail(
                     context = context,
