@@ -1,7 +1,6 @@
 package com.example.androidbazar.views
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,14 +24,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.androidbazar.R
-import com.example.androidbazar.common.Price
+import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
-import com.example.androidbazar.common.Description
-import com.example.androidbazar.common.Thumbnail
-import com.example.androidbazar.common.Title
+import com.example.androidbazar.common.TextDescription
+import com.example.androidbazar.common.ImageThumbnail
+import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.data.ProductsRepository
 import com.example.androidbazar.navigation.Screens
 import com.example.androidbazar.common.TopBar
+import com.example.androidbazar.common.MainActionButton
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -62,14 +62,14 @@ fun DetailsScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row {
-                Thumbnail(
+                ImageThumbnail(
                     context = context,
                     thumbnail = detailedItem.thumbnail,
                     size = 240.dp
                 )
                 LazyColumn {
                     items(detailedItem.images.size) { product ->
-                        Thumbnail(
+                        ImageThumbnail(
                             context = context,
                             thumbnail = detailedItem.images[product],
                             size = 90.dp
@@ -77,14 +77,14 @@ fun DetailsScreen(
                     }
                 }
             }
-            Title(
+            TextTitle(
                 title = detailedItem.title + " - " + detailedItem.brand,
                 size = 32.sp
             )
             Spacer(modifier = Modifier.padding(top = 16.dp))
             Row {
                 Column {
-                    Price(
+                    TextPrice(
                         price = detailedItem.price,
                         size = 24.sp
                     )
@@ -104,7 +104,7 @@ fun DetailsScreen(
                 )
             }
             Spacer(modifier = Modifier.padding(bottom = 24.dp))
-            Description(
+            TextDescription(
                 description = detailedItem.description,
                 size = 16.sp,
                 maxLines = 3,
@@ -119,26 +119,17 @@ fun DetailsScreen(
                     Text(text = stringResource(R.string.text_home))
                 }
                 Spacer(modifier = Modifier.padding(start = 16.dp))
-                PurchaseButton(context)
+                MainActionButton(
+                    onClick = {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.toast_confirmation),
+                            Toast.LENGTH_LONG
+                        ).show() },
+                    text = R.string.text_buy
+                )
             }
         }
     }
 }
 
-
-@Composable
-private fun PurchaseButton(context: Context) {
-    Button(
-        onClick = {
-            Toast.makeText(
-                context,
-                context.getString(R.string.toast_confirmation),
-                Toast.LENGTH_LONG
-            ).show()
-        },
-        modifier = Modifier
-            .padding(top = 16.dp)
-    ) {
-        Text(text = stringResource(R.string.text_buy))
-    }
-}

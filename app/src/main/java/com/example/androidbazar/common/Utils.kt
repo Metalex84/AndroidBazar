@@ -1,6 +1,7 @@
 package com.example.androidbazar.common
 
 import android.content.Context
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.aspectRatio
 
@@ -10,6 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -124,7 +126,7 @@ fun CustomRatingBar(rating: Double = 0.0, tint: Color) {
 }
 
 @Composable
-fun Thumbnail(context: Context, thumbnail: String, size: Dp) {
+fun ImageThumbnail(context: Context, thumbnail: String, size: Dp) {
     AsyncImage(
         model = ImageRequest.Builder(context = context)
             .data(thumbnail)
@@ -141,7 +143,7 @@ fun Thumbnail(context: Context, thumbnail: String, size: Dp) {
 }
 
 @Composable
-fun Title(title: String, size: TextUnit) {
+fun TextTitle(title: String, size: TextUnit) {
     Text(
         text = title,
         fontWeight = FontWeight.Bold,
@@ -151,7 +153,7 @@ fun Title(title: String, size: TextUnit) {
 }
 
 @Composable
-fun Price(price: Double, size: TextUnit) {
+fun TextPrice(price: Double, size: TextUnit) {
     Text(
         text = "$price$",
         fontSize = size,
@@ -160,7 +162,7 @@ fun Price(price: Double, size: TextUnit) {
 }
 
 @Composable
-fun Description(
+fun TextDescription(
     description: String,
     size: TextUnit,
     maxLines: Int,
@@ -176,4 +178,16 @@ fun Description(
         modifier = Modifier
             .padding(start = paddingStart, end = paddingEnd)
     )
+}
+
+
+@Composable
+fun MainActionButton(onClick: () -> Unit, text: Int) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .padding(top = 16.dp)
+    ) {
+        Text(text = stringResource(text))
+    }
 }

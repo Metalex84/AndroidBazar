@@ -34,11 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.androidbazar.R
-import com.example.androidbazar.common.Price
+import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
-import com.example.androidbazar.common.Description
-import com.example.androidbazar.common.Thumbnail
-import com.example.androidbazar.common.Title
+import com.example.androidbazar.common.TextDescription
+import com.example.androidbazar.common.ImageThumbnail
+import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.common.TopBar
 import com.example.androidbazar.data.Item
 import com.example.androidbazar.data.ProductsRepository
@@ -162,7 +162,7 @@ private fun ListOfResults(
                 }
             ) {
                 Row {
-                    Thumbnail(
+                    ImageThumbnail(
                         context = context,
                         thumbnail = productsList[index].thumbnail,
                         size = 160.dp
@@ -170,11 +170,11 @@ private fun ListOfResults(
                     Column (
                         horizontalAlignment = Alignment.Start
                     ) {
-                        Title(
+                        TextTitle(
                             title = productsList[index].title,
                             size = 22.sp
                         )
-                        Description(
+                        TextDescription(
                             description = productsList[index].description,
                             size = 12.sp,
                             maxLines = 4,
@@ -185,7 +185,7 @@ private fun ListOfResults(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Price(
+                            TextPrice(
                                 price = productsList[index].price,
                                 size = 24.sp
                             )
