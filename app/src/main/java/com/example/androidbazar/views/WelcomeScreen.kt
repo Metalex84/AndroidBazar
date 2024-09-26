@@ -20,11 +20,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.androidbazar.R
-import com.example.androidbazar.common.TopBar
 import com.example.androidbazar.common.KeywordSearchBar
 import com.example.androidbazar.common.MainActionButton
 import com.example.androidbazar.common.SearchBarPicture
@@ -35,14 +33,7 @@ fun WelcomeScreen (navController: NavController) {
 
     var typoSearch by rememberSaveable { mutableStateOf("") }
 
-    Scaffold (
-        topBar = {
-            TopBar(
-                text = stringResource(R.string.app_name),
-                navigateBack = {},
-                hasNavBack = false)
-        }
-    ) {
+    Scaffold {
         innerPadding ->
         Surface (
             modifier = Modifier

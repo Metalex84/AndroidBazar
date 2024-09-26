@@ -11,17 +11,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,40 +38,6 @@ import coil.request.ImageRequest
 import com.example.androidbazar.R
 import kotlin.math.ceil
 import kotlin.math.floor
-
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun TopBar(
-    text: String,
-    navigateBack: () -> Unit,
-    hasNavBack: Boolean
-) {
-    CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = Color.Black
-        ),
-        title = {
-            Text(
-                text = text,
-                fontWeight = FontWeight.Bold
-            )
-        },
-        navigationIcon = {
-            if (hasNavBack) {
-                IconButton(
-                    onClick = navigateBack,
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
-                    )
-                }
-            }
-        }
-    )
-}
 
 
 @Composable

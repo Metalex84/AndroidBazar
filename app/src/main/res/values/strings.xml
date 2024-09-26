@@ -12,4 +12,6 @@
     <string name="item_thumbnail">This is a random item thumbnail</string>
     <string name="buildtext_availability">" disponibles"</string>
     <string name="text_search_results_param">Resultados de busqueda de \'%1$s\': %2$s</string>
+    <string name="button_back">Volver a resultados</string>
+    <string name="button_new_search">Nueva busqueda</string>
 </resources>

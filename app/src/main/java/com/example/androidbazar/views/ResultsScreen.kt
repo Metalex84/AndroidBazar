@@ -17,11 +17,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,7 +42,6 @@ import com.example.androidbazar.common.ImageThumbnail
 import com.example.androidbazar.common.ResultsHeader
 import com.example.androidbazar.common.SearchHeader
 import com.example.androidbazar.common.TextTitle
-import com.example.androidbazar.common.TopBar
 import com.example.androidbazar.data.Item
 import com.example.androidbazar.data.ProductsRepository
 
@@ -54,7 +50,6 @@ import com.example.androidbazar.data.ProductsRepository
 fun ResultsScreen(
     keywords: String,
     navController: NavController,
-    navigateBack: () -> Unit
 ) {
     val context = LocalContext.current
     val repository = remember { ProductsRepository.create(context.applicationContext) }
@@ -73,38 +68,32 @@ fun ResultsScreen(
         MaterialTheme.colorScheme.surfaceContainerLow
     )
 
-    Scaffold (
-        topBar = {
-            TopBar(
-                text = stringResource(R.string.text_home),
-                navigateBack = navigateBack,
-                hasNavBack = true
-            ) }
-        ) {
-            Column (modifier = Modifier.fillMaxSize()) {
-                SearchHeader(
-                    value = typoSearch,
-                    onValueChange = { typoSearch = it },
-                    label = R.string.hint_keywords,
-                    picture = R.drawable.shopping,
-                    modifier = Modifier.fillMaxWidth().padding(top = 120.dp)
-                )
-                ResultsHeader(
-                    keywords = typoSearch,
-                    size = searchedSubList.size,
-                )
-                CategoriesGroupedBy(
-                    eachCategory = eachCategory,
-                    buttonTypes = buttonTypes
-                )
-                ListOfResults(
-                    productsList = searchedSubList,
-                    context = context,
-                    navController = navController
-                )
-            }
-        }
-
+    Column (
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        SearchHeader(
+            value = typoSearch,
+            onValueChange = { typoSearch = it },
+            label = R.string.hint_keywords,
+            picture = R.drawable.shopping,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp)
+        )
+        ResultsHeader(
+            keywords = typoSearch,
+            size = searchedSubList.size,
+        )
+        CategoriesGroupedBy(
+            eachCategory = eachCategory,
+            buttonTypes = buttonTypes
+        )
+        ListOfResults(
+            productsList = searchedSubList,
+            context = context,
+            navController = navController
+        )
+    }
 }
 
 @Composable

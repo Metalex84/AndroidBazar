@@ -25,18 +25,14 @@ fun Navigation() {
             arguments = listOf(navArgument("keywords") { type = NavType.StringType } )
         ) { backStackEntry ->
             val keywords = backStackEntry.arguments?.getString("keywords")
-            ResultsScreen(keywords.toString(), navController) {
-                navController.popBackStack()
-            }
+            ResultsScreen(keywords.toString(), navController)
         }
         composable(
             route = "details_screen/{id}",
             arguments = listOf(navArgument("id") { type = NavType.IntType} )
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getInt("id")
-            DetailsScreen(id.toString(), navController) {
-                navController.popBackStack()
-            }
+            DetailsScreen(id.toString(), navController)
         }
     }
 }
