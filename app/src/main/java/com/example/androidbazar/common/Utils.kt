@@ -198,7 +198,7 @@ fun MainActionButton(onClick: () -> Unit, text: Int) {
 }
 
 @Composable
-fun AppMainPicture(picture: Int, size: Dp) {
+fun SearchBarPicture(picture: Int, size: Dp) {
     Image(
         painter = painterResource(picture),
         contentDescription = null,
@@ -231,6 +231,7 @@ fun SearchHeader(
     value: String,
     onValueChange: (String) -> Unit,
     label: Int,
+    picture: Int,
     modifier: Modifier
 ) {
     Row (
@@ -238,8 +239,8 @@ fun SearchHeader(
         verticalAlignment = Alignment.Bottom,
         modifier = modifier
     ) {
-        AppMainPicture(
-            picture = R.drawable.shopping,
+        SearchBarPicture(
+            picture = picture,
             size = 84.dp
         )
         KeywordSearchBar(

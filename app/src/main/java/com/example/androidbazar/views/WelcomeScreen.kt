@@ -27,7 +27,7 @@ import com.example.androidbazar.R
 import com.example.androidbazar.common.TopBar
 import com.example.androidbazar.common.KeywordSearchBar
 import com.example.androidbazar.common.MainActionButton
-import com.example.androidbazar.common.AppMainPicture
+import com.example.androidbazar.common.SearchBarPicture
 import com.example.androidbazar.common.AppMainTitle
 
 @Composable
@@ -59,7 +59,7 @@ fun WelcomeScreen (navController: NavController) {
                     .safeDrawingPadding(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                AppMainPicture(
+                SearchBarPicture(
                     picture = R.drawable.shopping,
                     size = 240.dp
                 )

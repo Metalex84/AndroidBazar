@@ -86,6 +86,7 @@ fun ResultsScreen(
                     value = typoSearch,
                     onValueChange = { typoSearch = it },
                     label = R.string.hint_keywords,
+                    picture = R.drawable.shopping,
                     modifier = Modifier.fillMaxWidth().padding(top = 120.dp)
                 )
                 ResultsHeader(
