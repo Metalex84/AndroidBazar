@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -60,8 +61,9 @@ fun ResultsScreen(
 
     val productsList = remember { repository.getAll() }
 
-    val searchedSubList = productsList.filter { keywordSearch(it, keywords) }
+    var typoSearch by rememberSaveable { mutableStateOf(keywords) }
 
+    val searchedSubList = productsList.filter { keywordSearch(it, typoSearch) }
     val categoriesSublist = searchedSubList.map { it.category }
     val eachCategory = categoriesSublist.groupingBy { it }.eachCount()
 
@@ -70,8 +72,6 @@ fun ResultsScreen(
         MaterialTheme.colorScheme.surfaceContainer,
         MaterialTheme.colorScheme.surfaceContainerLow
     )
-
-    var typoSearch by rememberSaveable { mutableStateOf(keywords) }
 
     Scaffold (
         topBar = {
@@ -89,7 +89,7 @@ fun ResultsScreen(
                     modifier = Modifier.fillMaxWidth().padding(top = 120.dp)
                 )
                 ResultsHeader(
-                    keywords = keywords,
+                    keywords = typoSearch,
                     size = searchedSubList.size,
                 )
                 CategoriesGroupedBy(
