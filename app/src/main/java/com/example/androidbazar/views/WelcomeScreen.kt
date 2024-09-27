@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.androidbazar.R
 import com.example.androidbazar.common.KeywordSearchBar
-import com.example.androidbazar.common.MainActionButton
+import com.example.androidbazar.common.PrimaryButton
 import com.example.androidbazar.common.SearchBarPicture
 import com.example.androidbazar.common.AppMainTitle
 
@@ -61,7 +61,7 @@ fun WelcomeScreen (navController: NavController) {
                     onValueChange = { typoSearch = it },
                     label = R.string.hint_keywords,
                 )
-                MainActionButton(
+                PrimaryButton(
                     text = R.string.button_search,
                     onClick = { navController.navigate(route = "results_screen/${typoSearch}") }
                 )

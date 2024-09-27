@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -147,15 +148,25 @@ fun TextDescription(
 
 
 @Composable
-fun MainActionButton(onClick: () -> Unit, text: Int) {
+fun PrimaryButton(onClick: () -> Unit, text: Int) {
     Button(
         onClick = onClick,
-        modifier = Modifier
-            .padding(top = 16.dp)
+        modifier = Modifier.padding(top = 16.dp)
     ) {
         Text(text = stringResource(text))
     }
 }
+@Composable
+fun SecondaryButton(onClick: () -> Unit, text: Int) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = Modifier.padding(top = 16.dp)
+    ) {
+        Text(text = stringResource(text))
+    }
+}
+
+
 
 @Composable
 fun SearchBarPicture(picture: Int, size: Dp) {

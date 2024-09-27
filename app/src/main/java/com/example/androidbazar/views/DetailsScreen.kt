@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,8 +34,9 @@ import com.example.androidbazar.common.TextDescription
 import com.example.androidbazar.common.ImageThumbnail
 import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.data.ProductsRepository
-import com.example.androidbazar.common.MainActionButton
+import com.example.androidbazar.common.PrimaryButton
 import com.example.androidbazar.common.SearchHeader
+import com.example.androidbazar.common.SecondaryButton
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -66,19 +67,15 @@ fun DetailsScreen(
                 .padding(top = 24.dp)
         )
         Row {
-            Button(
-                onClick = { navController.navigate(route = "results_screen/${typoSearch}") },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text(stringResource(R.string.button_search))
-            }
-            Spacer(modifier = Modifier.padding(start = 24.dp))
-            Button(
+            SecondaryButton(
                 onClick = { navController.popBackStack() },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text(text = stringResource(R.string.button_back))
-            }
+                text = R.string.button_back
+            )
+            Spacer(modifier = Modifier.padding(start = 24.dp))
+            PrimaryButton(
+                onClick = { navController.navigate(route = "results_screen/${typoSearch}") },
+                text = R.string.button_search
+            )
         }
         Row {
             ImageThumbnail(
@@ -134,7 +131,7 @@ fun DetailsScreen(
         )
         Row {
             Spacer(modifier = Modifier.padding(start = 16.dp))
-            MainActionButton(
+            PrimaryButton(
                 onClick = {
                     Toast.makeText(
                         context,
