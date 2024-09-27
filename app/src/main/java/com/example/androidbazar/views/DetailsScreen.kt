@@ -86,10 +86,10 @@ fun DetailsScreen(
             LazyColumn (
                 modifier = Modifier.height(240.dp)
             ) {
-                items(detailedItem.images.size) { product ->
+                items(detailedItem.images.size) { index ->
                     ImageThumbnail(
                         context = context,
-                        thumbnail = detailedItem.images[product],
+                        thumbnail = detailedItem.images[index],
                         size = 90.dp
                     )
                 }

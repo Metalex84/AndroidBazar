@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -98,14 +98,12 @@ fun ResultsScreen(
 
 @Composable
 fun CategoriesGroupedBy(eachCategory: Map<String, Int>, buttonTypes: List<Color>) {
-    val categoryList = eachCategory.toList()
     var index = 0
 
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 150.dp),
-        modifier = Modifier.padding(top = 16.dp)
+    LazyRow (
+        modifier = Modifier.width(360.dp)
     ) {
-        items(categoryList) { (key, value) ->
+        items(eachCategory.entries.toList()) { position ->
             ElevatedCard(
                 colors = CardDefaults.cardColors(
                     containerColor = buttonTypes[(index++%3)]
@@ -116,7 +114,7 @@ fun CategoriesGroupedBy(eachCategory: Map<String, Int>, buttonTypes: List<Color>
                 modifier = Modifier.padding(8.dp)
             ){
                 Text(
-                    text = "$key: $value",
+                    text = "$position",
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.ExtraBold,
