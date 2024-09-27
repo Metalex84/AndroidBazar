@@ -38,7 +38,7 @@ import com.example.androidbazar.R
 import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
 import com.example.androidbazar.common.TextDescription
-import com.example.androidbazar.common.ImageThumbnail
+import com.example.androidbazar.common.ItemPicture
 import com.example.androidbazar.common.ResultsHeader
 import com.example.androidbazar.common.SearchHeader
 import com.example.androidbazar.common.TextTitle
@@ -159,7 +159,7 @@ private fun ListOfResults(
                 }
             ) {
                 Row {
-                    ImageThumbnail(
+                    ItemPicture(
                         context = context,
                         thumbnail = productsList[index].thumbnail,
                         size = 160.dp

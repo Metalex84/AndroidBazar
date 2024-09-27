@@ -2,7 +2,9 @@ package com.example.androidbazar.views
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,10 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,7 +33,7 @@ import com.example.androidbazar.R
 import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
 import com.example.androidbazar.common.TextDescription
-import com.example.androidbazar.common.ImageThumbnail
+import com.example.androidbazar.common.ItemPicture
 import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.data.ProductsRepository
 import com.example.androidbazar.common.PrimaryButton
@@ -51,6 +53,16 @@ fun DetailsScreen(
     val detailedItem = repository.getItem(productId.toInt())
 
     var typoSearch by rememberSaveable { mutableStateOf("") }
+
+    // Construyo la lista de imágenes
+    val picturesList = mutableListOf<String>()
+    picturesList.add(detailedItem.thumbnail)
+    for (picture in detailedItem.images) {
+        picturesList.add(picture)
+    }
+
+    // Recuerdo el índice (primero) de la colección
+    var selectedImageIndex by remember { mutableIntStateOf(0) }
 
     Column (
         modifier = Modifier.fillMaxWidth(),
@@ -78,20 +90,24 @@ fun DetailsScreen(
             )
         }
         Row {
-            ImageThumbnail(
+            ItemPicture(
                 context = context,
-                thumbnail = detailedItem.thumbnail,
+                thumbnail = picturesList[selectedImageIndex],
                 size = 240.dp
             )
             LazyColumn (
                 modifier = Modifier.height(240.dp)
             ) {
                 items(detailedItem.images.size) { index ->
-                    ImageThumbnail(
-                        context = context,
-                        thumbnail = detailedItem.images[index],
-                        size = 90.dp
-                    )
+                    Box (
+                        modifier = Modifier.clickable { selectedImageIndex = index }
+                    ) {
+                        ItemPicture(
+                            context = context,
+                            thumbnail = picturesList[index],
+                            size = 90.dp
+                        )
+                    }
                 }
             }
         }

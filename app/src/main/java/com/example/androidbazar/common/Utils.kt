@@ -3,6 +3,7 @@ package com.example.androidbazar.common
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -92,7 +93,7 @@ fun CustomRatingBar(rating: Double = 0.0, tint: Color) {
 }
 
 @Composable
-fun ImageThumbnail(context: Context, thumbnail: String, size: Dp) {
+fun ItemPicture(context: Context, thumbnail: String, size: Dp) {
     AsyncImage(
         model = ImageRequest.Builder(context = context)
             .data(thumbnail)
@@ -107,6 +108,7 @@ fun ImageThumbnail(context: Context, thumbnail: String, size: Dp) {
             .clip(CircleShape)
     )
 }
+
 
 @Composable
 fun TextTitle(title: String, size: TextUnit) {
