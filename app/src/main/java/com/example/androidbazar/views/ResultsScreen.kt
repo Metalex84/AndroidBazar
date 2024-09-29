@@ -2,7 +2,9 @@ package com.example.androidbazar.views
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -39,8 +43,9 @@ import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
 import com.example.androidbazar.common.TextDescription
 import com.example.androidbazar.common.ItemPicture
+import com.example.androidbazar.common.KeywordSearchBar
 import com.example.androidbazar.common.ResultsHeader
-import com.example.androidbazar.common.SearchHeader
+import com.example.androidbazar.common.SearchBarPicture
 import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.data.Item
 import com.example.androidbazar.data.ProductsRepository
@@ -71,15 +76,30 @@ fun ResultsScreen(
     Column (
         modifier = Modifier.fillMaxWidth()
     ) {
-        SearchHeader(
-            value = typoSearch,
-            onValueChange = { typoSearch = it },
-            label = R.string.hint_keywords,
-            picture = R.drawable.shopping,
+        Row (
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
-        )
+        ) {
+            Box (
+                modifier = Modifier.clickable {
+                    navController.navigate(route = "welcome_screen")
+                }
+            ) {
+                SearchBarPicture(
+                    picture = R.drawable.shopping,
+                    size = 84.dp
+                )
+            }
+            KeywordSearchBar(
+                value = typoSearch,
+                leadingIcon = Icons.Default.Search,
+                onValueChange = { typoSearch = it },
+                label = R.string.hint_keywords
+            )
+        }
         ResultsHeader(
             keywords = typoSearch,
             size = searchedSubList.size,

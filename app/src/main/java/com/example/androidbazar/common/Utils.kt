@@ -3,23 +3,17 @@ package com.example.androidbazar.common
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -198,32 +192,6 @@ fun AppMainTitle(
     )
 }
 
-
-@Composable
-fun SearchHeader(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: Int,
-    picture: Int,
-    modifier: Modifier
-) {
-    Row (
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Bottom,
-        modifier = modifier
-    ) {
-        SearchBarPicture(
-            picture = picture,
-            size = 84.dp
-        )
-        KeywordSearchBar(
-            value = value,
-            leadingIcon = Icons.Default.Search,
-            onValueChange = onValueChange,
-            label = label
-        )
-    }
-}
 
 @Composable
 fun ResultsHeader(keywords: String?, size: Int) {

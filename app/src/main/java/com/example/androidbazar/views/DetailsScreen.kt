@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,10 +36,11 @@ import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
 import com.example.androidbazar.common.TextDescription
 import com.example.androidbazar.common.ItemPicture
+import com.example.androidbazar.common.KeywordSearchBar
 import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.data.ProductsRepository
 import com.example.androidbazar.common.PrimaryButton
-import com.example.androidbazar.common.SearchHeader
+import com.example.androidbazar.common.SearchBarPicture
 import com.example.androidbazar.common.SecondaryButton
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -64,20 +67,35 @@ fun DetailsScreen(
     // Recuerdo el índice (primero) de la colección
     var selectedImageIndex by remember { mutableIntStateOf(0) }
 
-    Column (
+    Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        SearchHeader(
-            value = typoSearch,
-            onValueChange = { typoSearch = it },
-            label = R.string.hint_keywords,
-            picture = R.drawable.shopping,
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
-        )
+        ) {
+            Box(
+                modifier = Modifier.clickable {
+                    navController.navigate(route = "welcome_screen")
+                }
+            ) {
+                SearchBarPicture(
+                    picture = R.drawable.shopping,
+                    size = 84.dp
+                )
+            }
+            KeywordSearchBar(
+                value = typoSearch,
+                leadingIcon = Icons.Default.Search,
+                onValueChange = { typoSearch = it },
+                label = R.string.hint_keywords
+            )
+        }
         Row {
             SecondaryButton(
                 onClick = { navController.popBackStack() },
@@ -95,11 +113,11 @@ fun DetailsScreen(
                 thumbnail = picturesList[selectedImageIndex],
                 size = 240.dp
             )
-            LazyColumn (
+            LazyColumn(
                 modifier = Modifier.height(240.dp)
             ) {
                 items(detailedItem.images.size) { index ->
-                    Box (
+                    Box(
                         modifier = Modifier.clickable { selectedImageIndex = index }
                     ) {
                         ItemPicture(
@@ -153,11 +171,10 @@ fun DetailsScreen(
                         context,
                         context.getString(R.string.toast_confirmation),
                         Toast.LENGTH_LONG
-                    ).show() },
+                    ).show()
+                },
                 text = R.string.text_buy
             )
         }
     }
-
 }
-
