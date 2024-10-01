@@ -62,7 +62,6 @@ fun ResultsScreen(
 
     var typoSearch by rememberSaveable { mutableStateOf(keywords) }
 
-    // TODO: intentar escribir esto más simple, y aislarlo en una función aparte
     val searchedSubList = productsList.filter { keywordSearch(it, typoSearch) }
     val categoriesSublist = searchedSubList.map { it.category }
     val eachCategory = categoriesSublist
@@ -103,7 +102,7 @@ fun ResultsScreen(
             size = searchedSubList.size,
         )
         CategoriesGroupedBy(
-            eachCategory = eachCategory,
+            eachCategory = eachCategory
         )
         ListOfResults(
             productsList = searchedSubList,
