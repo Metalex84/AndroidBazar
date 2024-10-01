@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -63,10 +62,13 @@ fun ResultsScreen(
 
     var typoSearch by rememberSaveable { mutableStateOf(keywords) }
 
+    // TODO: intentar escribir esto más simple, y aislarlo en una función aparte
     val searchedSubList = productsList.filter { keywordSearch(it, typoSearch) }
     val categoriesSublist = searchedSubList.map { it.category }
-    val eachCategory = categoriesSublist.groupingBy { it }.eachCount()
-
+    val eachCategory = categoriesSublist
+        .groupingBy { it }
+        .eachCount()
+        .map { (key, value) -> "$key:$value" }
 
 
     Column (
@@ -112,29 +114,33 @@ fun ResultsScreen(
 }
 
 @Composable
-fun CategoriesGroupedBy(eachCategory: Map<String, Int>) {
+fun CategoriesGroupedBy(eachCategory: List<String>) {
     val buttonTypes = listOf(
         MaterialTheme.colorScheme.surfaceVariant,
         MaterialTheme.colorScheme.surfaceContainer,
         MaterialTheme.colorScheme.surfaceContainerLow
     )
-    var index = 0
+    var i = 0
 
     LazyRow (
         modifier = Modifier.width(360.dp)
     ) {
-        items(eachCategory.entries.toList()) { position ->
+        items(eachCategory.size) { index ->
             ElevatedCard(
                 colors = CardDefaults.cardColors(
-                    containerColor = buttonTypes[(index++%3)]
+                    containerColor = buttonTypes[(i++%3)]
                 ),
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = 8.dp
                 ),
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clickable {
+                        println(eachCategory[index].split(":")[0])
+                    }
             ){
                 Text(
-                    text = "$position",
+                    text = eachCategory[index],
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.ExtraBold,
