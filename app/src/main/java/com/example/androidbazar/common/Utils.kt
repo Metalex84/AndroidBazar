@@ -110,7 +110,7 @@ fun TextTitle(title: String, size: TextUnit) {
         text = title,
         fontWeight = FontWeight.Bold,
         fontSize = size,
-        modifier = Modifier.padding(top = 20.dp)
+        modifier = Modifier.padding(top = 12.dp)
     )
 }
 

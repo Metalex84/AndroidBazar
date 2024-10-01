@@ -26,4 +26,13 @@ class AssetsProductsDataSource(private val context: Context) {
         val product = products.filter { it.id == id }
         return product[0]
     }
+
+    /**
+     * Funcion que devuelve una lista de items filtrando por categoria
+     * */
+    fun getProductsByCategory(category: String): List<Product> {
+        val products = readProducts()
+        val itemsList = products.filter { it.category == category }
+        return itemsList
+    }
 }

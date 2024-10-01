@@ -14,6 +14,11 @@ class ProductsRepository (
         return assetsProductsDataSource.getProductById(id).toItem()
     }
 
+    fun getItemsByCategory(category: String): List<Item> {
+        return assetsProductsDataSource.getProductsByCategory(category)
+            .map { product -> product.toItem() }
+    }
+
     /**
      * 'create' es la factoría para crear el singleton del repositorio para toda la app
      * */

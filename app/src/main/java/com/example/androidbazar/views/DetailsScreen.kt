@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Text
@@ -53,8 +55,14 @@ fun DetailsScreen(
     val context = LocalContext.current
     val repository = remember { ProductsRepository.create(context.applicationContext) }
 
+    // Recupero el producto como tal
     val detailedItem = repository.getItem(productId.toInt())
 
+    // Recupero algunos items de la misma categoria excluyendo el elemento de muestra
+    val relatedItems = repository.getItemsByCategory(detailedItem.category)
+        .filter { it.id != detailedItem.id }
+
+    // El texto de busqueda:
     var typoSearch by rememberSaveable { mutableStateOf("") }
 
     // Construyo la lista de imágenes
@@ -114,7 +122,7 @@ fun DetailsScreen(
                 size = 240.dp
             )
             LazyColumn(
-                modifier = Modifier.height(240.dp)
+                modifier = Modifier.height(222.dp)
             ) {
                 items(detailedItem.images.size) { index ->
                     Box(
@@ -123,7 +131,7 @@ fun DetailsScreen(
                         ItemPicture(
                             context = context,
                             thumbnail = picturesList[index],
-                            size = 90.dp
+                            size = 72.dp
                         )
                     }
                 }
@@ -131,7 +139,7 @@ fun DetailsScreen(
         }
         TextTitle(
             title = detailedItem.title + " - " + detailedItem.brand,
-            size = 32.sp
+            size = 28.sp
         )
         Spacer(modifier = Modifier.padding(top = 16.dp))
         Row {
@@ -155,7 +163,7 @@ fun DetailsScreen(
                 tint = Color.Yellow
             )
         }
-        Spacer(modifier = Modifier.padding(bottom = 24.dp))
+        Spacer(modifier = Modifier.padding(bottom = 16.dp))
         TextDescription(
             description = detailedItem.description,
             size = 16.sp,
@@ -163,18 +171,36 @@ fun DetailsScreen(
             paddingStart = 16.dp,
             paddingEnd = 16.dp
         )
-        Row {
-            Spacer(modifier = Modifier.padding(start = 16.dp))
-            PrimaryButton(
-                onClick = {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.toast_confirmation),
-                        Toast.LENGTH_LONG
-                    ).show()
-                },
-                text = R.string.text_buy
-            )
+        TextTitle(
+            title = stringResource(R.string.text_likely_items),
+            size = 18.sp
+        )
+        LazyRow (
+            modifier = Modifier.width(340.dp)
+        ) {
+            items(relatedItems.size) { index ->
+                Box(
+                    modifier = Modifier.clickable { navController.navigate(
+                        route = "details_screen/${relatedItems[index].id}"
+                    ) }
+                ) {
+                    ItemPicture (
+                        context = context,
+                        thumbnail = relatedItems[index].thumbnail,
+                        size = 82.dp
+                    )
+                }
+            }
         }
+        PrimaryButton(
+            onClick = {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.toast_confirmation),
+                    Toast.LENGTH_LONG
+                ).show()
+            },
+            text = R.string.text_buy
+        )
     }
 }
