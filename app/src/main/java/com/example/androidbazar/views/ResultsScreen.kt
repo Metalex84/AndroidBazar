@@ -67,11 +67,7 @@ fun ResultsScreen(
     val categoriesSublist = searchedSubList.map { it.category }
     val eachCategory = categoriesSublist.groupingBy { it }.eachCount()
 
-    val buttonTypes = listOf(
-        MaterialTheme.colorScheme.surfaceVariant,
-        MaterialTheme.colorScheme.surfaceContainer,
-        MaterialTheme.colorScheme.surfaceContainerLow
-    )
+
 
     Column (
         modifier = Modifier.fillMaxWidth()
@@ -106,7 +102,6 @@ fun ResultsScreen(
         )
         CategoriesGroupedBy(
             eachCategory = eachCategory,
-            buttonTypes = buttonTypes
         )
         ListOfResults(
             productsList = searchedSubList,
@@ -117,7 +112,12 @@ fun ResultsScreen(
 }
 
 @Composable
-fun CategoriesGroupedBy(eachCategory: Map<String, Int>, buttonTypes: List<Color>) {
+fun CategoriesGroupedBy(eachCategory: Map<String, Int>) {
+    val buttonTypes = listOf(
+        MaterialTheme.colorScheme.surfaceVariant,
+        MaterialTheme.colorScheme.surfaceContainer,
+        MaterialTheme.colorScheme.surfaceContainerLow
+    )
     var index = 0
 
     LazyRow (
