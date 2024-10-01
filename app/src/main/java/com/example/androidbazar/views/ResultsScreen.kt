@@ -64,10 +64,11 @@ fun ResultsScreen(
 
     val searchedSubList = productsList.filter { keywordSearch(it, typoSearch) }
     val categoriesSublist = searchedSubList.map { it.category }
+
     val eachCategory = categoriesSublist
         .groupingBy { it }
         .eachCount()
-        .map { (key, value) -> "$key:$value" }
+        .toList()
 
 
     Column (
@@ -113,7 +114,10 @@ fun ResultsScreen(
 }
 
 @Composable
-fun CategoriesGroupedBy(eachCategory: List<String>) {
+fun CategoriesGroupedBy(
+    eachCategory: List<Pair<String, Int>>,
+    // onClick: (String) -> Unit
+) {
     val buttonTypes = listOf(
         MaterialTheme.colorScheme.surfaceVariant,
         MaterialTheme.colorScheme.surfaceContainer,
@@ -135,11 +139,13 @@ fun CategoriesGroupedBy(eachCategory: List<String>) {
                 modifier = Modifier
                     .padding(8.dp)
                     .clickable {
-                        println(eachCategory[index].split(":")[0])
+                        // TODO: hacer algo aquí con las categorías
+
+                        println(eachCategory[index].first)
                     }
             ){
                 Text(
-                    text = eachCategory[index],
+                    text = eachCategory[index].let { "${it.first}:${it.second}" },
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.ExtraBold,

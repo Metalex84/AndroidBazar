@@ -192,6 +192,7 @@ fun DetailsScreen(
                 }
             }
         }
+        // TODO: este toast está fuera de la pantalla, no se ve
         PrimaryButton(
             onClick = {
                 Toast.makeText(
