@@ -127,25 +127,11 @@ fun DetailsScreen(
                 title = stringResource(R.string.text_likely_items),
                 size = 20.sp
             )
-            /*****************************/
-            LazyRow (
-                modifier = Modifier.width(340.dp)
-            ) {
-                items(relatedItems.size) { index ->
-                    Box(
-                        modifier = Modifier.clickable { navController.navigate(
-                            route = "details_screen/${relatedItems[index].id}"
-                        ) }
-                    ) {
-                        ItemPicture (
-                            context = context,
-                            thumbnail = relatedItems[index].thumbnail,
-                            size = 78.dp
-                        )
-                    }
-                }
-            }
-            /*****************************/
+            RelatedItems(
+                navController = navController,
+                context = context,
+                relatedItems = relatedItems
+            )
             PrimaryButton(
                 onClick = {
                     Toast.makeText(
@@ -222,4 +208,28 @@ private fun ItemAvailability(
         fontSize = 10.sp,
         fontWeight = FontWeight.ExtraBold
     )
+}
+
+@Composable
+private fun RelatedItems(
+    relatedItems: List<Item>,
+    navController: NavController,
+    context: Context
+) {
+    LazyRow (
+        modifier = Modifier.width(340.dp)
+    ) {
+        items(relatedItems.size) { index ->
+            Box(
+                modifier = Modifier.clickable {
+                    navController.navigate(route = "details_screen/${relatedItems[index].id}") }
+            ) {
+                ItemPicture (
+                    context = context,
+                    thumbnail = relatedItems[index].thumbnail,
+                    size = 78.dp
+                )
+            }
+        }
+    }
 }
