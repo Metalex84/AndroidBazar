@@ -1,6 +1,7 @@
 package com.example.androidbazar.views
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -41,6 +42,7 @@ import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.data.ProductsRepository
 import com.example.androidbazar.common.PrimaryButton
 import com.example.androidbazar.common.SecondaryButton
+import com.example.androidbazar.data.Item
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -68,7 +70,7 @@ fun DetailsScreen(
     var selectedImageIndex by remember { mutableIntStateOf(0) }
 
     Box (
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         Column (
@@ -80,38 +82,22 @@ fun DetailsScreen(
                 value = typoSearch,
                 onValueChange = { typoSearch = it }
             )
+
+            ActionButtons(
+                navController = navController,
+                typoSearch = typoSearch
+            )
             Row {
-                SecondaryButton(
-                    onClick = { navController.popBackStack() },
-                    text = R.string.button_back
-                )
-                Spacer(modifier = Modifier.padding(start = 24.dp))
-                PrimaryButton(
-                    onClick = { navController.navigate(route = "results_screen/${typoSearch}") },
-                    text = R.string.button_search
-                )
-            }
-            Row {
-                ItemPicture(
+                /*****************************/
+
+                /*****************************/
+                PictureCarousel(
+                    picturesList = picturesList,
+                    selectedImageIndex = selectedImageIndex,
+                    detailedItem = detailedItem,
                     context = context,
-                    thumbnail = picturesList[selectedImageIndex],
-                    size = 200.dp
+                    onSelectedImageIndexChange = { selectedImageIndex = it }
                 )
-                LazyColumn(
-                    modifier = Modifier.height(200.dp)
-                ) {
-                    items(detailedItem.images.size) { index ->
-                        Box(
-                            modifier = Modifier.clickable { selectedImageIndex = index }
-                        ) {
-                            ItemPicture(
-                                context = context,
-                                thumbnail = picturesList[index],
-                                size = 65.dp
-                            )
-                        }
-                    }
-                }
             }
             TextTitle(
                 title = detailedItem.title + " - " + detailedItem.brand,
@@ -181,4 +167,53 @@ fun DetailsScreen(
             )
         }
     }
+}
+
+@Composable
+private fun ActionButtons(
+    navController: NavController,
+    typoSearch: String,
+
+){
+    Row {
+        SecondaryButton(
+            onClick = { navController.popBackStack() },
+            text = R.string.button_back
+        )
+        Spacer(modifier = Modifier.padding(start = 24.dp))
+        PrimaryButton(
+            onClick = { navController.navigate(route = "results_screen/${typoSearch}") },
+            text = R.string.button_search
+        )
+    }
+}
+
+@Composable
+private fun PictureCarousel(
+    picturesList: List<String>,
+    selectedImageIndex: Int,
+    detailedItem: Item,
+    context: Context,
+    onSelectedImageIndexChange: (Int) -> Unit
+    ) {
+        ItemPicture(
+            context = context,
+            thumbnail = picturesList[selectedImageIndex],
+            size = 200.dp
+        )
+        LazyColumn(
+            modifier = Modifier.height(200.dp)
+        ) {
+            items(detailedItem.images.size) { index ->
+                Box(
+                    modifier = Modifier.clickable { onSelectedImageIndexChange(index) }
+                ) {
+                    ItemPicture(
+                        context = context,
+                        thumbnail = picturesList[index],
+                        size = 65.dp
+                    )
+                }
+            }
+        }
 }

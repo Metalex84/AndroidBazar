@@ -69,7 +69,7 @@ fun ResultsScreen(
     }
 
     Box (
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         Column (
@@ -119,7 +119,7 @@ fun CategoriesGroupedBy(
     var i = 0
 
     LazyRow (
-        modifier = Modifier.width(360.dp)
+        modifier = Modifier.width(340.dp)
     ) {
         items(eachCategory.size) { index ->
             ElevatedCard(
