@@ -88,9 +88,6 @@ fun DetailsScreen(
                 typoSearch = typoSearch
             )
             Row {
-                /*****************************/
-
-                /*****************************/
                 PictureCarousel(
                     picturesList = picturesList,
                     selectedImageIndex = selectedImageIndex,
@@ -110,14 +107,7 @@ fun DetailsScreen(
                         price = detailedItem.price,
                         size = 18.sp
                     )
-                    Text(
-                        text = buildString {
-                            append(detailedItem.stock.toString())
-                            append(stringResource(R.string.buildtext_availability))
-                        },
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
+                    ItemAvailability(detailedItem)
                 }
                 Spacer(modifier = Modifier.padding(start = 24.dp))
                 CustomRatingBar(
@@ -137,6 +127,7 @@ fun DetailsScreen(
                 title = stringResource(R.string.text_likely_items),
                 size = 20.sp
             )
+            /*****************************/
             LazyRow (
                 modifier = Modifier.width(340.dp)
             ) {
@@ -154,6 +145,7 @@ fun DetailsScreen(
                     }
                 }
             }
+            /*****************************/
             PrimaryButton(
                 onClick = {
                     Toast.makeText(
@@ -195,25 +187,39 @@ private fun PictureCarousel(
     detailedItem: Item,
     context: Context,
     onSelectedImageIndexChange: (Int) -> Unit
+) {
+    ItemPicture(
+        context = context,
+        thumbnail = picturesList[selectedImageIndex],
+        size = 200.dp
+    )
+    LazyColumn(
+        modifier = Modifier.height(200.dp)
     ) {
-        ItemPicture(
-            context = context,
-            thumbnail = picturesList[selectedImageIndex],
-            size = 200.dp
-        )
-        LazyColumn(
-            modifier = Modifier.height(200.dp)
-        ) {
-            items(detailedItem.images.size) { index ->
-                Box(
-                    modifier = Modifier.clickable { onSelectedImageIndexChange(index) }
-                ) {
-                    ItemPicture(
-                        context = context,
-                        thumbnail = picturesList[index],
-                        size = 65.dp
-                    )
-                }
+        items(detailedItem.images.size) { index ->
+            Box(
+                modifier = Modifier.clickable { onSelectedImageIndexChange(index) }
+            ) {
+                ItemPicture(
+                    context = context,
+                    thumbnail = picturesList[index],
+                    size = 65.dp
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun ItemAvailability(
+    detailedItem: Item
+) {
+    Text(
+        text = buildString {
+            append(detailedItem.stock.toString())
+            append(stringResource(R.string.buildtext_availability))
+        },
+        fontSize = 10.sp,
+        fontWeight = FontWeight.ExtraBold
+    )
 }
