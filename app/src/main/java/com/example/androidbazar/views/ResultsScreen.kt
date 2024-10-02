@@ -70,6 +70,15 @@ fun ResultsScreen(
         .eachCount()
         .toList()
 
+    // Manejo el cambio de estado por click en categoría
+    var categorySelected by rememberSaveable { mutableStateOf("") }
+
+    var filteredList: List<Item> = if (categorySelected == "") {
+        searchedSubList
+    } else {
+        searchedSubList.filter { it.category == categorySelected }
+    }
+
 
     Column (
         modifier = Modifier.fillMaxWidth()
@@ -100,13 +109,14 @@ fun ResultsScreen(
         }
         ResultsHeader(
             keywords = typoSearch,
-            size = searchedSubList.size,
+            size = filteredList.size,
         )
         CategoriesGroupedBy(
-            eachCategory = eachCategory
+            eachCategory = eachCategory,
+            onCategoryClicked = { categorySelected = it }
         )
         ListOfResults(
-            productsList = searchedSubList,
+            productsList = filteredList,
             context = context,
             navController = navController
         )
@@ -116,7 +126,7 @@ fun ResultsScreen(
 @Composable
 fun CategoriesGroupedBy(
     eachCategory: List<Pair<String, Int>>,
-    // onClick: (String) -> Unit
+    onCategoryClicked: (String) -> Unit
 ) {
     val buttonTypes = listOf(
         MaterialTheme.colorScheme.surfaceVariant,
@@ -138,11 +148,7 @@ fun CategoriesGroupedBy(
                 ),
                 modifier = Modifier
                     .padding(8.dp)
-                    .clickable {
-                        // TODO: hacer algo aquí con las categorías
-
-                        println(eachCategory[index].first)
-                    }
+                    .clickable { onCategoryClicked(eachCategory[index].first) }
             ){
                 Text(
                     text = eachCategory[index].let { "${it.first}:${it.second}" },
