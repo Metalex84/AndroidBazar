@@ -63,17 +63,10 @@ fun ResultsScreen(
     var typoSearch by rememberSaveable { mutableStateOf(keywords) }
 
     val searchedSubList = productsList.filter { keywordSearch(it, typoSearch) }
-    val categoriesSublist = searchedSubList.map { it.category }
 
-    val eachCategory = categoriesSublist
-        .groupingBy { it }
-        .eachCount()
-        .toList()
-
-    // Manejo el cambio de estado por click en categoría
     var categorySelected by rememberSaveable { mutableStateOf("") }
 
-    var filteredList: List<Item> = if (categorySelected == "") {
+    val filteredList: List<Item> = if (categorySelected == "") {
         searchedSubList
     } else {
         searchedSubList.filter { it.category == categorySelected }
@@ -112,7 +105,7 @@ fun ResultsScreen(
             size = filteredList.size,
         )
         CategoriesGroupedBy(
-            eachCategory = eachCategory,
+            searchedSubList = searchedSubList,
             onCategoryClicked = { categorySelected = it }
         )
         ListOfResults(
@@ -125,7 +118,7 @@ fun ResultsScreen(
 
 @Composable
 fun CategoriesGroupedBy(
-    eachCategory: List<Pair<String, Int>>,
+    searchedSubList: List<Item>,
     onCategoryClicked: (String) -> Unit
 ) {
     val buttonTypes = listOf(
@@ -133,6 +126,13 @@ fun CategoriesGroupedBy(
         MaterialTheme.colorScheme.surfaceContainer,
         MaterialTheme.colorScheme.surfaceContainerLow
     )
+    val categoriesSublist = searchedSubList.map { it.category }
+
+    val eachCategory = categoriesSublist
+        .groupingBy { it }
+        .eachCount()
+        .toList()
+
     var i = 0
 
     LazyRow (
