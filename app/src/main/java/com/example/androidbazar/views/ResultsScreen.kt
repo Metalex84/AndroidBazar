@@ -18,12 +18,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -32,12 +37,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.androidbazar.R
 import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
 import com.example.androidbazar.common.TextDescription
@@ -65,14 +72,32 @@ fun ResultsScreen(
 
     var categorySelected by rememberSaveable { mutableStateOf("") }
 
+    var sortBy by rememberSaveable { mutableIntStateOf(2) }
+
     val filteredList: List<Item> = if (categorySelected == "") {
         searchedSubList
     } else {
         searchedSubList.filter { it.category == categorySelected }
     }
 
+    val sortedList: List<Item> = when (sortBy) {
+        2 -> {
+            filteredList
+        }
+        1 -> {
+            filteredList.sortedByDescending { it.rating }
+        }
+        else -> {
+            filteredList.sortedByDescending { it.price }.reversed()
+        }
+    }
+
+
+
     Box (
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         contentAlignment = Alignment.TopStart
     ) {
         Column {
@@ -88,9 +113,9 @@ fun ResultsScreen(
             ) {
                 ResultsHeader(
                     keywords = typoSearch,
-                    size = filteredList.size,
+                    size = sortedList.size,
                 )
-                FilterMenu()
+                SortMenu(onSortSelected = { sortBy = it } )
             }
 
             CategoriesGroupedBy(
@@ -98,7 +123,7 @@ fun ResultsScreen(
                 onCategoryClicked = { categorySelected = it }
             )
             ListOfResults(
-                productsList = filteredList,
+                productsList = sortedList,
                 context = context,
                 navController = navController
             )
@@ -223,12 +248,45 @@ private fun ListOfResults(
 }
 
 @Composable
-private fun FilterMenu(){
-    Box(){
-        Icon(
-            imageVector = Icons.Filled.Menu,
-            contentDescription = null,
-        )
+private fun SortMenu(
+    onSortSelected: (Int) -> Unit
+){
+    var expanded by remember { mutableStateOf(false) }
+    val options = listOf(
+        stringResource(R.string.menu_sort_by_price),
+        stringResource(R.string.menu_sort_by_rating)
+    )
+    Box(
+        modifier = Modifier
+            .minimumInteractiveComponentSize()
+            .clickable { expanded = true }
+    ){
+        Row (
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton (
+                onClick = { expanded = true }
+            ) {
+                Icon (
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Sort Menu Icon",
+                )
+            }
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false}
+        ) {
+            options.forEach { option ->
+                DropdownMenuItem(
+                    text = { Text(option) },
+                    onClick = {
+                        onSortSelected(options.indexOf(option))
+                        expanded = false
+                    }
+                )
+            }
+        }
     }
 }
 
