@@ -209,7 +209,7 @@ fun ResultsHeader(keywords: String?, size: Int) {
         text = stringResource(R.string.text_search_results_param, keywords as String, size),
         fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.ExtraBold,
-        modifier = Modifier.padding(top = 16.dp)
+        modifier = Modifier.padding(top = 8.dp)
     )
 }
 

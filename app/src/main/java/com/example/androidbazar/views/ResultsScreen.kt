@@ -14,9 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,21 +73,26 @@ fun ResultsScreen(
 
     Box (
         modifier = Modifier.fillMaxSize().padding(16.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.TopStart
     ) {
-        Column (
-            modifier = Modifier.align(Alignment.TopCenter),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column {
             MainHeader(
                 navController = navController,
                 value = typoSearch,
                 onValueChange = { typoSearch = it }
             )
-            ResultsHeader(
-                keywords = typoSearch,
-                size = filteredList.size,
-            )
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ResultsHeader(
+                    keywords = typoSearch,
+                    size = filteredList.size,
+                )
+                FilterMenu()
+            }
+
             CategoriesGroupedBy(
                 searchedSubList = searchedSubList,
                 onCategoryClicked = { categorySelected = it }
@@ -211,6 +219,16 @@ private fun ListOfResults(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun FilterMenu(){
+    Box(){
+        Icon(
+            imageVector = Icons.Filled.Menu,
+            contentDescription = null,
+        )
     }
 }
 
