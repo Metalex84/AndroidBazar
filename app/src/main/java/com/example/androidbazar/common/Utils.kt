@@ -151,10 +151,14 @@ fun TextDescription(
 }
 
 @Composable
-fun PrimaryButton(onClick: () -> Unit, text: Int) {
+fun PrimaryButton(
+    onClick: () -> Unit,
+    text: Int,
+    modifier: Modifier = Modifier
+) {
     Button(
         onClick = onClick,
-        modifier = Modifier.padding(top = 8.dp)
+        modifier = modifier.padding(top = 8.dp)
     ) {
         Text(text = stringResource(text))
     }
