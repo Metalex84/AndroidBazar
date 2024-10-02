@@ -3,19 +3,16 @@ package com.example.androidbazar.views
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,11 +35,10 @@ import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
 import com.example.androidbazar.common.TextDescription
 import com.example.androidbazar.common.ItemPicture
-import com.example.androidbazar.common.KeywordSearchBar
+import com.example.androidbazar.common.MainHeader
 import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.data.ProductsRepository
 import com.example.androidbazar.common.PrimaryButton
-import com.example.androidbazar.common.SearchBarPicture
 import com.example.androidbazar.common.SecondaryButton
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -55,153 +51,132 @@ fun DetailsScreen(
     val context = LocalContext.current
     val repository = remember { ProductsRepository.create(context.applicationContext) }
 
-    // Recupero el producto como tal
     val detailedItem = repository.getItem(productId.toInt())
 
-    // Recupero algunos items de la misma categoria excluyendo el elemento de muestra
     val relatedItems = repository.getItemsByCategory(detailedItem.category)
         .filter { it.id != detailedItem.id }
 
-    // El texto de busqueda:
     var typoSearch by rememberSaveable { mutableStateOf("") }
 
-    // Construyo la lista de imágenes
     val picturesList = mutableListOf<String>()
     picturesList.add(detailedItem.thumbnail)
     for (picture in detailedItem.images) {
         picturesList.add(picture)
     }
 
-    // Recuerdo el índice (primero) de la colección
     var selectedImageIndex by remember { mutableIntStateOf(0) }
 
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box (
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp)
+        Column (
+            modifier = Modifier.align(Alignment.TopCenter),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier.clickable {
-                    navController.navigate(route = "welcome_screen")
-                }
-            ) {
-                SearchBarPicture(
-                    picture = R.drawable.shopping,
-                    size = 84.dp
+            MainHeader(
+                navController = navController,
+                value = typoSearch,
+                onValueChange = { typoSearch = it }
+            )
+            Row {
+                SecondaryButton(
+                    onClick = { navController.popBackStack() },
+                    text = R.string.button_back
+                )
+                Spacer(modifier = Modifier.padding(start = 24.dp))
+                PrimaryButton(
+                    onClick = { navController.navigate(route = "results_screen/${typoSearch}") },
+                    text = R.string.button_search
                 )
             }
-            KeywordSearchBar(
-                value = typoSearch,
-                leadingIcon = Icons.Default.Search,
-                onValueChange = { typoSearch = it },
-                label = R.string.hint_keywords
+            Row {
+                ItemPicture(
+                    context = context,
+                    thumbnail = picturesList[selectedImageIndex],
+                    size = 200.dp
+                )
+                LazyColumn(
+                    modifier = Modifier.height(200.dp)
+                ) {
+                    items(detailedItem.images.size) { index ->
+                        Box(
+                            modifier = Modifier.clickable { selectedImageIndex = index }
+                        ) {
+                            ItemPicture(
+                                context = context,
+                                thumbnail = picturesList[index],
+                                size = 65.dp
+                            )
+                        }
+                    }
+                }
+            }
+            TextTitle(
+                title = detailedItem.title + " - " + detailedItem.brand,
+                size = 24.sp
             )
-        }
-        Row {
-            SecondaryButton(
-                onClick = { navController.popBackStack() },
-                text = R.string.button_back
+            Spacer(modifier = Modifier.padding(top = 16.dp))
+            Row {
+                Column {
+                    TextPrice(
+                        price = detailedItem.price,
+                        size = 18.sp
+                    )
+                    Text(
+                        text = buildString {
+                            append(detailedItem.stock.toString())
+                            append(stringResource(R.string.buildtext_availability))
+                        },
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
+                Spacer(modifier = Modifier.padding(start = 24.dp))
+                CustomRatingBar(
+                    detailedItem.rating,
+                    tint = Color.Yellow
+                )
+            }
+            Spacer(modifier = Modifier.padding(bottom = 16.dp))
+            TextDescription(
+                description = detailedItem.description,
+                size = 12.sp,
+                maxLines = 3,
+                paddingStart = 16.dp,
+                paddingEnd = 16.dp
             )
-            Spacer(modifier = Modifier.padding(start = 24.dp))
-            PrimaryButton(
-                onClick = { navController.navigate(route = "results_screen/${typoSearch}") },
-                text = R.string.button_search
+            TextTitle(
+                title = stringResource(R.string.text_likely_items),
+                size = 20.sp
             )
-        }
-        Row {
-            ItemPicture(
-                context = context,
-                thumbnail = picturesList[selectedImageIndex],
-                size = 240.dp
-            )
-            LazyColumn(
-                modifier = Modifier.height(222.dp)
+            LazyRow (
+                modifier = Modifier.width(340.dp)
             ) {
-                items(detailedItem.images.size) { index ->
+                items(relatedItems.size) { index ->
                     Box(
-                        modifier = Modifier.clickable { selectedImageIndex = index }
+                        modifier = Modifier.clickable { navController.navigate(
+                            route = "details_screen/${relatedItems[index].id}"
+                        ) }
                     ) {
-                        ItemPicture(
+                        ItemPicture (
                             context = context,
-                            thumbnail = picturesList[index],
-                            size = 72.dp
+                            thumbnail = relatedItems[index].thumbnail,
+                            size = 78.dp
                         )
                     }
                 }
             }
-        }
-        TextTitle(
-            title = detailedItem.title + " - " + detailedItem.brand,
-            size = 28.sp
-        )
-        Spacer(modifier = Modifier.padding(top = 16.dp))
-        Row {
-            Column {
-                TextPrice(
-                    price = detailedItem.price,
-                    size = 24.sp
-                )
-                Text(
-                    text = buildString {
-                        append(detailedItem.stock.toString())
-                        append(stringResource(R.string.buildtext_availability))
-                    },
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-            }
-            Spacer(modifier = Modifier.padding(start = 24.dp))
-            CustomRatingBar(
-                detailedItem.rating,
-                tint = Color.Yellow
+            PrimaryButton(
+                onClick = {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.toast_confirmation),
+                        Toast.LENGTH_LONG
+                    ).show()
+                },
+                text = R.string.text_buy
             )
         }
-        Spacer(modifier = Modifier.padding(bottom = 16.dp))
-        TextDescription(
-            description = detailedItem.description,
-            size = 16.sp,
-            maxLines = 3,
-            paddingStart = 16.dp,
-            paddingEnd = 16.dp
-        )
-        TextTitle(
-            title = stringResource(R.string.text_likely_items),
-            size = 18.sp
-        )
-        LazyRow (
-            modifier = Modifier.width(340.dp)
-        ) {
-            items(relatedItems.size) { index ->
-                Box(
-                    modifier = Modifier.clickable { navController.navigate(
-                        route = "details_screen/${relatedItems[index].id}"
-                    ) }
-                ) {
-                    ItemPicture (
-                        context = context,
-                        thumbnail = relatedItems[index].thumbnail,
-                        size = 82.dp
-                    )
-                }
-            }
-        }
-        // TODO: este toast está fuera de la pantalla, no se ve
-        PrimaryButton(
-            onClick = {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.toast_confirmation),
-                    Toast.LENGTH_LONG
-                ).show()
-            },
-            text = R.string.text_buy
-        )
     }
 }

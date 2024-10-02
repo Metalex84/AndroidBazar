@@ -3,17 +3,24 @@ package com.example.androidbazar.common
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -29,6 +36,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbazar.R
@@ -142,27 +150,25 @@ fun TextDescription(
     )
 }
 
-
 @Composable
 fun PrimaryButton(onClick: () -> Unit, text: Int) {
     Button(
         onClick = onClick,
-        modifier = Modifier.padding(top = 16.dp)
+        modifier = Modifier.padding(top = 8.dp)
     ) {
         Text(text = stringResource(text))
     }
 }
+
 @Composable
 fun SecondaryButton(onClick: () -> Unit, text: Int) {
     OutlinedButton(
         onClick = onClick,
-        modifier = Modifier.padding(top = 16.dp)
+        modifier = Modifier.padding(top = 8.dp)
     ) {
         Text(text = stringResource(text))
     }
 }
-
-
 
 @Composable
 fun SearchBarPicture(picture: Int, size: Dp) {
@@ -172,7 +178,7 @@ fun SearchBarPicture(picture: Int, size: Dp) {
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .size(size)
-            .padding(top = 16.dp)
+            .padding(top = 8.dp)
             .aspectRatio(1.0f)
             .clip(CircleShape)
     )
@@ -201,4 +207,33 @@ fun ResultsHeader(keywords: String?, size: Int) {
         fontWeight = FontWeight.ExtraBold,
         modifier = Modifier.padding(top = 16.dp)
     )
+}
+
+@Composable
+fun MainHeader(
+    navController: NavController,
+    value: String,
+    onValueChange: (String) -> Unit
+) {
+    Row (
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box (
+            modifier = Modifier.clickable {
+                navController.navigate(route = "welcome_screen")
+            }
+        ) {
+            SearchBarPicture(
+                picture = R.drawable.shopping,
+                size = 84.dp
+            )
+        }
+        KeywordSearchBar(
+            value = value,
+            leadingIcon = Icons.Default.Search,
+            onValueChange = onValueChange,
+            label = R.string.hint_keywords
+        )
+    }
 }

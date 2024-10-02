@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -37,14 +35,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.androidbazar.R
 import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
 import com.example.androidbazar.common.TextDescription
 import com.example.androidbazar.common.ItemPicture
-import com.example.androidbazar.common.KeywordSearchBar
+import com.example.androidbazar.common.MainHeader
 import com.example.androidbazar.common.ResultsHeader
-import com.example.androidbazar.common.SearchBarPicture
 import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.data.Item
 import com.example.androidbazar.data.ProductsRepository
@@ -72,48 +68,35 @@ fun ResultsScreen(
         searchedSubList.filter { it.category == categorySelected }
     }
 
-
-    Column (
-        modifier = Modifier.fillMaxWidth()
+    Box (
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Row (
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp)
+        Column (
+            modifier = Modifier.align(Alignment.TopCenter),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box (
-                modifier = Modifier.clickable {
-                    navController.navigate(route = "welcome_screen")
-                }
-            ) {
-                SearchBarPicture(
-                    picture = R.drawable.shopping,
-                    size = 84.dp
-                )
-            }
-            KeywordSearchBar(
+            MainHeader(
+                navController = navController,
                 value = typoSearch,
-                leadingIcon = Icons.Default.Search,
-                onValueChange = { typoSearch = it },
-                label = R.string.hint_keywords
+                onValueChange = { typoSearch = it }
+            )
+            ResultsHeader(
+                keywords = typoSearch,
+                size = filteredList.size,
+            )
+            CategoriesGroupedBy(
+                searchedSubList = searchedSubList,
+                onCategoryClicked = { categorySelected = it }
+            )
+            ListOfResults(
+                productsList = filteredList,
+                context = context,
+                navController = navController
             )
         }
-        ResultsHeader(
-            keywords = typoSearch,
-            size = filteredList.size,
-        )
-        CategoriesGroupedBy(
-            searchedSubList = searchedSubList,
-            onCategoryClicked = { categorySelected = it }
-        )
-        ListOfResults(
-            productsList = filteredList,
-            context = context,
-            navController = navController
-        )
     }
+
 }
 
 @Composable
@@ -161,7 +144,6 @@ fun CategoriesGroupedBy(
             Spacer(modifier  = Modifier.padding(start = 8.dp))
         }
     }
-
 }
 
 @Composable
