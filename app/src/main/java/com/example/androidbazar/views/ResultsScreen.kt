@@ -121,9 +121,9 @@ fun ResultsScreen(
     ) {
         Column {
             MainHeader(
-                navController = navController,
                 value = typoSearch,
-                onValueChange = { typoSearch = it }
+                onValueChange = { typoSearch = it },
+                onNavigationClick = { navController.navigate("welcome_screen") }
             )
             Row (
                 modifier = Modifier.fillMaxWidth(),
@@ -141,7 +141,6 @@ fun ResultsScreen(
                 selectedCategory = categorySelected,
                 onCategoryClicked = { categorySelected = it },
             )
-            println(categorySelected)
             ListOfResults(
                 productsList = filteredList,
                 context = context,

@@ -78,9 +78,9 @@ fun DetailsScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             MainHeader(
-                navController = navController,
                 value = typoSearch,
-                onValueChange = { typoSearch = it }
+                onValueChange = { typoSearch = it },
+                onNavigationClick = { navController.navigate("welcome_screen") }
             )
 
             ActionButtons(

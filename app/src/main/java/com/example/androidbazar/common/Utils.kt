@@ -215,18 +215,16 @@ fun ResultsHeader(keywords: String?, size: Int) {
 
 @Composable
 fun MainHeader(
-    navController: NavController,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    onNavigationClick: () -> Unit
 ) {
     Row (
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box (
-            modifier = Modifier.clickable {
-                navController.navigate(route = "welcome_screen")
-            }
+            modifier = Modifier.clickable { onNavigationClick() }
         ) {
             SearchBarPicture(
                 picture = R.drawable.shopping,
