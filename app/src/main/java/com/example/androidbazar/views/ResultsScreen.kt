@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -69,37 +70,44 @@ fun ResultsScreen(
     /** Getting products from data source. Remember to retrieve once only!  */
     val productsList = remember { repository.getAll() }
 
-    /** Keywords of search. Can mutate! It determines the list to be shown */
+    /** Keywords - will filter the list */
     var typoSearch by rememberSaveable { mutableStateOf(keywords) }
-    val searchedSubList = productsList.filter { keywordSearch(it, typoSearch) }
 
-    /** Categories: */
-    var categorySelected by remember { mutableStateOf<String?>(null) }
-    val eachCategoryList = searchedSubList.map { it.category }
+    /** Categories - will filter the list */
+    var categorySelected by rememberSaveable { mutableStateOf<String?>(null) }
+
+    /** Sort criteria: */
+    var sortBy by rememberSaveable { mutableIntStateOf(2) }
+
+    /** FILTERING the actual list */
+    val filteredList by produceState(
+        initialValue = productsList,
+        key1 = typoSearch,
+        key2 = categorySelected,
+        key3 = sortBy
+    ) {
+        val list = when (sortBy) {
+            0 -> productsList.sortedByDescending { it.price }.reversed()
+            1 -> productsList.sortedByDescending { it.rating }
+            else -> productsList
+        }
+        value = list
+            .filter {
+                keywordSearch(it, typoSearch)
+            }
+            .filter {
+                if (categorySelected == null)
+                    true
+                else
+                    it.category == categorySelected
+            }
+    }
+
+    /** List of categories based on the filtered list, not the whole collection */
+    val eachCategoryList = filteredList.map { it.category }
         .groupingBy { it }
         .eachCount()
         .toList()
-
-    /** FILTERING: need to be simplified (just one list with building filters )*/
-    val filteredList: List<Item> = if (categorySelected == null) {
-        searchedSubList
-    } else {
-        searchedSubList.filter { it.category == categorySelected }
-    }
-
-    /** SORTING: */
-    var sortBy by rememberSaveable { mutableIntStateOf(2) }
-    val sortedList: List<Item> = when (sortBy) {
-        2 -> {
-            filteredList
-        }
-        1 -> {
-            filteredList.sortedByDescending { it.rating }
-        }
-        else -> {
-            filteredList.sortedByDescending { it.price }.reversed()
-        }
-    }
 
     Box (
         modifier = Modifier
@@ -120,7 +128,7 @@ fun ResultsScreen(
             ) {
                 ResultsHeader(
                     keywords = typoSearch,
-                    size = sortedList.size,
+                    size = filteredList.size,
                 )
                 SortMenu(onSortSelected = { sortBy = it } )
             }
@@ -131,7 +139,7 @@ fun ResultsScreen(
             )
             println(categorySelected)
             ListOfResults(
-                productsList = sortedList,
+                productsList = filteredList,
                 context = context,
                 navController = navController
             )
@@ -182,7 +190,6 @@ fun CategoriesGroupedBy(
     }
 }
 
-@Composable
 private fun keywordSearch(it: Item, keywords: String) =
     it.title.contains(keywords, ignoreCase = true) ||
             it.description.contains(keywords, ignoreCase = true) ||
