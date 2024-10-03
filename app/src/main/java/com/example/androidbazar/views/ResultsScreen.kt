@@ -107,11 +107,14 @@ fun ResultsScreen(
             }
     }
 
-    /** List of categories based on the filtered list, not the whole collection */
-    val eachCategoryList = filteredList.map { it.category }
-        .groupingBy { it }
-        .eachCount()
-        .toList()
+    /** List of categories based on the filtered list, not the whole collection.
+     *  And should only be executed after list changes. */
+    val eachCategoryList = remember(filteredList) {
+        filteredList.map { it.category }
+            .groupingBy { it }
+            .eachCount()
+            .toList()
+    }
 
     Box (
         modifier = Modifier
