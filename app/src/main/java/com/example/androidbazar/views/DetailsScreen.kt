@@ -82,11 +82,17 @@ fun DetailsScreen(
                 onValueChange = { typoSearch = it },
                 onNavigationClick = { navController.navigate("welcome_screen") }
             )
-
-            ActionButtons(
-                navController = navController,
-                typoSearch = typoSearch
-            )
+            Row {
+                SecondaryButton(
+                    onClick = { navController.popBackStack() },
+                    text = R.string.button_back
+                )
+                Spacer(modifier = Modifier.padding(start = 24.dp))
+                PrimaryButton(
+                    onClick = { navController.navigate(route = "results_screen/${typoSearch}") },
+                    text = R.string.button_search
+                )
+            }
             Row {
                 PictureCarousel(
                     picturesList = picturesList,
@@ -147,24 +153,6 @@ fun DetailsScreen(
     }
 }
 
-@Composable
-private fun ActionButtons(
-    navController: NavController,
-    typoSearch: String,
-
-){
-    Row {
-        SecondaryButton(
-            onClick = { navController.popBackStack() },
-            text = R.string.button_back
-        )
-        Spacer(modifier = Modifier.padding(start = 24.dp))
-        PrimaryButton(
-            onClick = { navController.navigate(route = "results_screen/${typoSearch}") },
-            text = R.string.button_search
-        )
-    }
-}
 
 @Composable
 private fun PictureCarousel(
