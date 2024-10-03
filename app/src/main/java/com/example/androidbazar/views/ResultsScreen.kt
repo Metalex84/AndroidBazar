@@ -58,6 +58,10 @@ import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.data.Item
 import com.example.androidbazar.data.ProductsRepository
 
+private const val SORT_PRICE = 0
+private const val SORT_RATING = 1
+private const val SORT_NONE = 2
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ResultsScreen(
@@ -77,7 +81,7 @@ fun ResultsScreen(
     var categorySelected by rememberSaveable { mutableStateOf<String?>(null) }
 
     /** Sort criteria: */
-    var sortBy by rememberSaveable { mutableIntStateOf(2) }
+    var sortBy by rememberSaveable { mutableIntStateOf(SORT_NONE) }
 
     /** FILTERING the actual list */
     val filteredList by produceState(
@@ -87,8 +91,8 @@ fun ResultsScreen(
         key3 = sortBy
     ) {
         val list = when (sortBy) {
-            0 -> productsList.sortedByDescending { it.price }.reversed()
-            1 -> productsList.sortedByDescending { it.rating }
+            SORT_PRICE -> productsList.sortedBy { it.price }
+            SORT_RATING -> productsList.sortedByDescending { it.rating }
             else -> productsList
         }
         value = list
@@ -262,6 +266,7 @@ private fun SortMenu(
     onSortSelected: (Int) -> Unit
 ){
     var expanded by remember { mutableStateOf(false) }
+
     val options = listOf(
         stringResource(R.string.menu_sort_by_price),
         stringResource(R.string.menu_sort_by_rating)
