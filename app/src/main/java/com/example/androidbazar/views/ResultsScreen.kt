@@ -141,11 +141,71 @@ fun ResultsScreen(
                 selectedCategory = categorySelected,
                 onCategoryClicked = { categorySelected = it },
             )
-            ListOfResults(
-                productsList = filteredList,
+            LazyColumn (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 52.dp)
+            ) {
+                items(filteredList.size) { index ->
+                    ProductCard(
+                        context = context,
+                        product = filteredList[index],
+                        onNavigationClick = {
+                            navController.navigate(route = "details_screen/${filteredList[index].id}")
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ProductCard (
+    context: Context,
+    product: Item,
+    onNavigationClick: () -> Unit
+) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp, end = 12.dp),
+        onClick = { onNavigationClick() }
+    ) {
+        Row {
+            ItemPicture(
                 context = context,
-                navController = navController
+                thumbnail = product.thumbnail,
+                size = 160.dp
             )
+            Column (
+                horizontalAlignment = Alignment.Start
+            ) {
+                TextTitle(
+                    title = product.title,
+                    size = 22.sp
+                )
+                TextDescription(
+                    description = product.description,
+                    size = 12.sp,
+                    maxLines = 4,
+                    paddingStart = 0.dp,
+                    paddingEnd = 16.dp
+                )
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TextPrice(
+                        price = product.price,
+                        size = 24.sp
+                    )
+                    CustomRatingBar(product.rating, Color.Yellow)
+                }
+            }
         }
     }
 }
@@ -199,66 +259,6 @@ private fun keywordSearch(it: Item, keywords: String) =
             it.category.contains(keywords, ignoreCase = true) ||
             it.brand?.contains(keywords, ignoreCase = true) ?: false
 
-
-@Composable
-private fun ListOfResults(
-    productsList: List<Item>,
-    context: Context,
-    navController: NavController,
-) {
-    LazyColumn (
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 52.dp)
-    ) {
-        items(productsList.size) { index ->
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.Transparent
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp, end = 12.dp),
-                onClick = {
-                    navController.navigate(route = "details_screen/${productsList[index].id}")
-                }
-            ) {
-                Row {
-                    ItemPicture(
-                        context = context,
-                        thumbnail = productsList[index].thumbnail,
-                        size = 160.dp
-                    )
-                    Column (
-                        horizontalAlignment = Alignment.Start
-                    ) {
-                        TextTitle(
-                            title = productsList[index].title,
-                            size = 22.sp
-                        )
-                        TextDescription(
-                            description = productsList[index].description,
-                            size = 12.sp,
-                            maxLines = 4,
-                            paddingStart = 0.dp,
-                            paddingEnd = 16.dp
-                        )
-                        Row (
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextPrice(
-                                price = productsList[index].price,
-                                size = 24.sp
-                            )
-                            CustomRatingBar(productsList[index].rating, Color.Yellow)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 private fun SortMenu(
