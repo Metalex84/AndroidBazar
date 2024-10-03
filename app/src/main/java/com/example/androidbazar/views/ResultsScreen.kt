@@ -11,19 +11,21 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -64,22 +66,29 @@ fun ResultsScreen(
     val context = LocalContext.current
     val repository = remember { ProductsRepository.create(context.applicationContext) }
 
+    /** Getting products from data source. Remember to retrieve once only!  */
     val productsList = remember { repository.getAll() }
 
+    /** Keywords of search. Can mutate! It determines the list to be shown */
     var typoSearch by rememberSaveable { mutableStateOf(keywords) }
-
     val searchedSubList = productsList.filter { keywordSearch(it, typoSearch) }
 
-    var categorySelected by rememberSaveable { mutableStateOf("") }
+    /** Categories: */
+    var categorySelected by remember { mutableStateOf<String?>(null) }
+    val eachCategoryList = searchedSubList.map { it.category }
+        .groupingBy { it }
+        .eachCount()
+        .toList()
 
-    var sortBy by rememberSaveable { mutableIntStateOf(2) }
-
-    val filteredList: List<Item> = if (categorySelected == "") {
+    /** FILTERING: need to be simplified (just one list with building filters )*/
+    val filteredList: List<Item> = if (categorySelected == null) {
         searchedSubList
     } else {
         searchedSubList.filter { it.category == categorySelected }
     }
 
+    /** SORTING: */
+    var sortBy by rememberSaveable { mutableIntStateOf(2) }
     val sortedList: List<Item> = when (sortBy) {
         2 -> {
             filteredList
@@ -91,8 +100,6 @@ fun ResultsScreen(
             filteredList.sortedByDescending { it.price }.reversed()
         }
     }
-
-
 
     Box (
         modifier = Modifier
@@ -117,11 +124,12 @@ fun ResultsScreen(
                 )
                 SortMenu(onSortSelected = { sortBy = it } )
             }
-
             CategoriesGroupedBy(
-                searchedSubList = searchedSubList,
-                onCategoryClicked = { categorySelected = it }
+                eachCategoryList = eachCategoryList,
+                selectedCategory = categorySelected,
+                onCategoryClicked = { categorySelected = it },
             )
+            println(categorySelected)
             ListOfResults(
                 productsList = sortedList,
                 context = context,
@@ -129,51 +137,46 @@ fun ResultsScreen(
             )
         }
     }
-
 }
 
 @Composable
 fun CategoriesGroupedBy(
-    searchedSubList: List<Item>,
-    onCategoryClicked: (String) -> Unit
+    eachCategoryList: List<Pair<String, Int>>,
+    selectedCategory: String?,
+    onCategoryClicked: (String?) -> Unit,
 ) {
-    val buttonTypes = listOf(
-        MaterialTheme.colorScheme.surfaceVariant,
-        MaterialTheme.colorScheme.surfaceContainer,
-        MaterialTheme.colorScheme.surfaceContainerLow
-    )
-    val categoriesSublist = searchedSubList.map { it.category }
-
-    val eachCategory = categoriesSublist
-        .groupingBy { it }
-        .eachCount()
-        .toList()
-
-    var i = 0
 
     LazyRow (
         modifier = Modifier.width(340.dp)
     ) {
-        items(eachCategory.size) { index ->
-            ElevatedCard(
-                colors = CardDefaults.cardColors(
-                    containerColor = buttonTypes[(i++%3)]
-                ),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 8.dp
-                ),
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickable { onCategoryClicked(eachCategory[index].first) }
-            ){
-                Text(
-                    text = eachCategory[index].let { "${it.first}:${it.second}" },
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontWeight = FontWeight.ExtraBold,
-                    textAlign = TextAlign.Center
-                )
-            }
+        items(eachCategoryList.size) { index ->
+            FilterChip(
+                selected = eachCategoryList[index].first == selectedCategory,
+                onClick = {
+                    if (eachCategoryList[index].first == selectedCategory)
+                        onCategoryClicked(null)
+                    else
+                        onCategoryClicked(eachCategoryList[index].first)
+                          },
+                label = {
+                    Text(
+                        text = eachCategoryList[index].let { "${it.first}:${it.second}" },
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        fontWeight = FontWeight.ExtraBold,
+                        textAlign = TextAlign.Center
+                    )
+                },
+                leadingIcon = { if (eachCategoryList[index].first == selectedCategory)
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.Done,
+                            contentDescription = null,
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
+                }
+            )
             Spacer(modifier  = Modifier.padding(start = 8.dp))
         }
     }
