@@ -83,19 +83,14 @@ fun ResultsScreen(
     /** Sort criteria: */
     var sortBy by rememberSaveable { mutableIntStateOf(SORT_NONE) }
 
-    /** FILTERING the actual list */
+    /** FILTERING the actual list before SORTING (to save computing time) */
     val filteredList by produceState(
         initialValue = productsList,
         key1 = typoSearch,
         key2 = categorySelected,
         key3 = sortBy
     ) {
-        val list = when (sortBy) {
-            SORT_PRICE -> productsList.sortedBy { it.price }
-            SORT_RATING -> productsList.sortedByDescending { it.rating }
-            else -> productsList
-        }
-        value = list
+        val list = productsList
             .filter {
                 keywordSearch(it, typoSearch)
             }
@@ -105,6 +100,11 @@ fun ResultsScreen(
                 else
                     it.category == categorySelected
             }
+        value = when (sortBy) {
+            SORT_PRICE -> list.sortedBy { it.price }
+            SORT_RATING -> list.sortedByDescending { it.rating }
+            else -> list
+        }
     }
 
     /** List of categories based on the filtered list, not the whole collection.
