@@ -28,17 +28,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbazar.R
+import com.example.androidbazar.ui.theme.MiddleTitle
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -110,23 +109,16 @@ fun ItemPicture(thumbnail: String, size: Dp) {
     )
 }
 
-
 @Composable
-fun TextTitle(title: String, size: TextUnit) {
-    Text(
-        text = title,
-        fontWeight = FontWeight.Bold,
-        fontSize = size,
-        modifier = Modifier.padding(top = 12.dp)
-    )
+fun CustomText(text: String, style: TextStyle) {
+    Text(text = text, style = style)
 }
 
 @Composable
-fun TextPrice(price: Double, size: TextUnit) {
-    Text(
-        text = "$price$",
-        fontSize = size,
-        fontWeight = FontWeight.ExtraBold
+fun ResultsHeader(keywords: String?, size: Int) {
+    CustomText(
+        text = stringResource(R.string.text_search_results_param, keywords as String, size),
+        style = MiddleTitle
     )
 }
 
@@ -184,31 +176,6 @@ fun SearchBarPicture(picture: Int, size: Dp) {
             .padding(top = 8.dp)
             .aspectRatio(1.0f)
             .clip(CircleShape)
-    )
-}
-
-
-@Composable
-fun AppMainTitle(
-    picture: Int
-) {
-    Text(
-        text = stringResource(picture),
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.ExtraBold,
-        fontSize = 32.sp,
-        modifier = Modifier.padding(bottom = 16.dp)
-    )
-}
-
-
-@Composable
-fun ResultsHeader(keywords: String?, size: Int) {
-    Text(
-        text = stringResource(R.string.text_search_results_param, keywords as String, size),
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.ExtraBold,
-        modifier = Modifier.padding(top = 8.dp)
     )
 }
 

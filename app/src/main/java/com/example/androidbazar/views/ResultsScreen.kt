@@ -48,15 +48,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.androidbazar.R
-import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
+import com.example.androidbazar.common.CustomText
 import com.example.androidbazar.common.TextDescription
 import com.example.androidbazar.common.ItemPicture
 import com.example.androidbazar.common.MainHeader
 import com.example.androidbazar.common.ResultsHeader
-import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.data.Item
 import com.example.androidbazar.data.ProductsRepository
+import com.example.androidbazar.ui.theme.Price
+import com.example.androidbazar.ui.theme.Subtitle
 
 private const val SORT_PRICE = 0
 private const val SORT_RATING = 1
@@ -133,6 +134,7 @@ fun ResultsScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Spacer(modifier = Modifier.padding(8.dp))
                 ResultsHeader(
                     keywords = typoSearch,
                     size = filteredList.size,
@@ -184,9 +186,9 @@ fun ProductCard (
             Column (
                 horizontalAlignment = Alignment.Start
             ) {
-                TextTitle(
-                    title = product.title,
-                    size = 22.sp
+                CustomText(
+                    text = product.title,
+                    style = Subtitle
                 )
                 TextDescription(
                     description = product.description,
@@ -199,9 +201,9 @@ fun ProductCard (
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    TextPrice(
-                        price = product.price,
-                        size = 24.sp
+                    CustomText(
+                        text = product.price.toString(),
+                        style = Price
                     )
                     CustomRatingBar(product.rating, Color.Yellow)
                 }
@@ -303,4 +305,3 @@ private fun SortMenu(
         }
     }
 }
-

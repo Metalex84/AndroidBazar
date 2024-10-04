@@ -33,16 +33,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.androidbazar.R
-import com.example.androidbazar.common.TextPrice
 import com.example.androidbazar.common.CustomRatingBar
+import com.example.androidbazar.common.CustomText
 import com.example.androidbazar.common.TextDescription
 import com.example.androidbazar.common.ItemPicture
 import com.example.androidbazar.common.MainHeader
-import com.example.androidbazar.common.TextTitle
 import com.example.androidbazar.data.ProductsRepository
 import com.example.androidbazar.common.PrimaryButton
 import com.example.androidbazar.common.SecondaryButton
 import com.example.androidbazar.data.Item
+import com.example.androidbazar.ui.theme.Price
+import com.example.androidbazar.ui.theme.Subtitle
+import com.example.androidbazar.ui.theme.NormalTitle
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -101,17 +103,17 @@ fun DetailsScreen(
                     onSelectedImageIndexChange = { selectedImageIndex = it }
                 )
             }
-            TextTitle(
-                title = detailedItem.title + " - " + detailedItem.brand,
-                size = 24.sp
+            CustomText(
+                text = detailedItem.title + " - " + detailedItem.brand,
+                style = NormalTitle
             )
             Spacer(modifier = Modifier.padding(top = 16.dp))
             Row {
                 Column {
-                    TextPrice(
-                        price = detailedItem.price,
-                        size = 18.sp
-                    )
+                    CustomText(
+                        text = detailedItem.price.toString(),
+                        style = Price
+                        )
                     ItemAvailability(detailedItem)
                 }
                 Spacer(modifier = Modifier.padding(start = 24.dp))
@@ -128,9 +130,9 @@ fun DetailsScreen(
                 paddingStart = 16.dp,
                 paddingEnd = 16.dp
             )
-            TextTitle(
-                title = stringResource(R.string.text_likely_items),
-                size = 20.sp
+            CustomText(
+                text = stringResource(R.string.text_likely_items),
+                style = Subtitle
             )
             RelatedItems(
                 navController = navController,
