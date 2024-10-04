@@ -1,7 +1,6 @@
 package com.example.androidbazar.views
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -99,7 +98,6 @@ fun DetailsScreen(
                     picturesList = picturesList,
                     selectedImageIndex = selectedImageIndex,
                     detailedItem = detailedItem,
-                    context = context,
                     onSelectedImageIndexChange = { selectedImageIndex = it }
                 )
             }
@@ -136,7 +134,6 @@ fun DetailsScreen(
             )
             RelatedItems(
                 navController = navController,
-                context = context,
                 relatedItems = relatedItems
             )
             PrimaryButton(
@@ -160,11 +157,9 @@ private fun PictureCarousel(
     picturesList: List<String>,
     selectedImageIndex: Int,
     detailedItem: Item,
-    context: Context,
     onSelectedImageIndexChange: (Int) -> Unit
 ) {
     ItemPicture(
-        context = context,
         thumbnail = picturesList[selectedImageIndex],
         size = 200.dp
     )
@@ -176,7 +171,6 @@ private fun PictureCarousel(
                 modifier = Modifier.clickable { onSelectedImageIndexChange(index) }
             ) {
                 ItemPicture(
-                    context = context,
                     thumbnail = picturesList[index],
                     size = 65.dp
                 )
@@ -203,7 +197,6 @@ private fun ItemAvailability(
 private fun RelatedItems(
     relatedItems: List<Item>,
     navController: NavController,
-    context: Context
 ) {
     LazyRow (
         modifier = Modifier.width(340.dp)
@@ -214,7 +207,6 @@ private fun RelatedItems(
                     navController.navigate(route = "details_screen/${value.id}") }
             ) {
                 ItemPicture (
-                    context = context,
                     thumbnail = value.thumbnail,
                     size = 78.dp
                 )

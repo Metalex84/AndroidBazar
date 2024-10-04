@@ -1,7 +1,6 @@
 package com.example.androidbazar.views
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -152,7 +151,6 @@ fun ResultsScreen(
             ) {
                 items(filteredList) { value ->
                     ProductCard(
-                        context = context,
                         product = value,
                         onNavigationClick = {
                             navController.navigate(route = "details_screen/${value.id}")
@@ -166,7 +164,6 @@ fun ResultsScreen(
 
 @Composable
 fun ProductCard (
-    context: Context,
     product: Item,
     onNavigationClick: () -> Unit
 ) {
@@ -181,7 +178,6 @@ fun ProductCard (
     ) {
         Row {
             ItemPicture(
-                context = context,
                 thumbnail = product.thumbnail,
                 size = 160.dp
             )

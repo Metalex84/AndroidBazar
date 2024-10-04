@@ -1,6 +1,5 @@
 package com.example.androidbazar.common
 
-import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -26,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbazar.R
@@ -95,9 +94,9 @@ fun CustomRatingBar(rating: Double = 0.0, tint: Color) {
 }
 
 @Composable
-fun ItemPicture(context: Context, thumbnail: String, size: Dp) {
+fun ItemPicture(thumbnail: String, size: Dp) {
     AsyncImage(
-        model = ImageRequest.Builder(context = context)
+        model = ImageRequest.Builder(context = LocalContext.current)
             .data(thumbnail)
             .crossfade(true)
             .build(),
