@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -207,14 +208,14 @@ private fun RelatedItems(
     LazyRow (
         modifier = Modifier.width(340.dp)
     ) {
-        items(relatedItems.size) { index ->
+        items(relatedItems) { value ->
             Box(
                 modifier = Modifier.clickable {
-                    navController.navigate(route = "details_screen/${relatedItems[index].id}") }
+                    navController.navigate(route = "details_screen/${value.id}") }
             ) {
                 ItemPicture (
                     context = context,
-                    thumbnail = relatedItems[index].thumbnail,
+                    thumbnail = value.thumbnail,
                     size = 78.dp
                 )
             }

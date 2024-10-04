@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Menu
@@ -149,12 +150,12 @@ fun ResultsScreen(
                     .fillMaxSize()
                     .padding(bottom = 52.dp)
             ) {
-                items(filteredList.size) { index ->
+                items(filteredList) { value ->
                     ProductCard(
                         context = context,
-                        product = filteredList[index],
+                        product = value,
                         onNavigationClick = {
-                            navController.navigate(route = "details_screen/${filteredList[index].id}")
+                            navController.navigate(route = "details_screen/${value.id}")
                         }
                     )
                 }
@@ -223,25 +224,25 @@ fun CategoriesGroupedBy(
     LazyRow (
         modifier = Modifier.width(340.dp)
     ) {
-        items(eachCategoryList.size) { index ->
+        items(eachCategoryList) { value ->
             FilterChip(
-                selected = eachCategoryList[index].first == selectedCategory,
+                selected = value.first == selectedCategory,
                 onClick = {
-                    if (eachCategoryList[index].first == selectedCategory)
+                    if (value.first == selectedCategory)
                         onCategoryClicked(null)
                     else
-                        onCategoryClicked(eachCategoryList[index].first)
+                        onCategoryClicked(value.first)
                           },
                 label = {
                     Text(
-                        text = eachCategoryList[index].let { "${it.first}:${it.second}" },
+                        text = value.let { "${it.first}:${it.second}" },
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontWeight = FontWeight.ExtraBold,
                         textAlign = TextAlign.Center
                     )
                 },
-                leadingIcon = { if (eachCategoryList[index].first == selectedCategory)
+                leadingIcon = { if (value.first == selectedCategory)
                     {
                         Icon(
                             imageVector = Icons.Filled.Done,
